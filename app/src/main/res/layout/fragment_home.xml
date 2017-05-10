@@ -25,15 +25,16 @@
                     android:id="@+id/kernelVersionTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="10dp"
                     android:textStyle="bold"
                     android:text="@string/currentVersion" />
 
                 <TextView
                     android:id="@+id/kvTextView"
                     android:layout_marginTop="5dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal" />
 
             </LinearLayout>
 

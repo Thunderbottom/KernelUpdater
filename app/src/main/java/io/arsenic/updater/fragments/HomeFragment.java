@@ -17,7 +17,6 @@ public class HomeFragment extends Fragment {
 
     TextView kernelVersion;
     String kVersion;
-    String val = "Linux localhost 3.4.0-Arsenic.Kernel-onyx.";
 
     public HomeFragment() {
         // Required empty public constructor
@@ -29,7 +28,7 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         ScrollView homeView = (ScrollView) inflater.inflate(R.layout.fragment_home, container, false);
         kernelVersion = (TextView) homeView.findViewById(R.id.kvTextView);
-        kVersion = ArsenicUtils.readKernelVersion(val);
+        kVersion = ArsenicUtils.getFormattedKernelVersion();
         kernelVersion.setText(kVersion);
         return homeView;
     }
