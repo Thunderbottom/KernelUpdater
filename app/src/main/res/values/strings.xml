@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Arsenic Updater</string>
+    <string name="title_home">Home</string>
+    <string name="title_about">About</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="easter_egg">This is just the beginning.</string>
+    <string name="copyright">Copyrights %1$d</string>
+    <string name="currentVersion">Current Kernel Version:</string>
+    <string name="title_download">Downloads</string>
+    <string name="versionSelect">Select Version</string>
+    <string name="search">Search</string>
+</resources>
