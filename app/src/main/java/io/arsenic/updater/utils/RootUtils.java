@@ -17,7 +17,7 @@
  * along with Kernel Adiutor.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package io.arsenic.updater;
+package io.arsenic.updater.utils;
 
 import android.util.Log;
 

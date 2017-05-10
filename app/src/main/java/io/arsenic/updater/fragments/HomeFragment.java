@@ -1,4 +1,4 @@
-package io.arsenic.updater;
+package io.arsenic.updater.fragments;
 
 
 import android.app.Fragment;
@@ -13,6 +13,8 @@ import android.widget.TextView;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+
+import io.arsenic.updater.R;
 
 
 public class HomeFragment extends Fragment {

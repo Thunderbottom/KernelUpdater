@@ -1,4 +1,4 @@
-package io.arsenic.updater;
+package io.arsenic.updater.views;
 
 import android.content.Context;
 import android.os.Parcelable;

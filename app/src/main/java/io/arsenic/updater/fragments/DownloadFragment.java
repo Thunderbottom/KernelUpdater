@@ -1,4 +1,4 @@
-package io.arsenic.updater;
+package io.arsenic.updater.fragments;
 
 
 import android.os.Bundle;
@@ -6,6 +6,8 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import io.arsenic.updater.R;
 
 
 public class DownloadFragment extends Fragment {

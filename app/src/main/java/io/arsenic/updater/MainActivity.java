@@ -10,6 +10,11 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import io.arsenic.updater.fragments.AboutFragment;
+import io.arsenic.updater.fragments.DownloadFragment;
+import io.arsenic.updater.fragments.HomeFragment;
+import io.arsenic.updater.utils.RootUtils;
+
 public class MainActivity extends AppCompatActivity {
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener

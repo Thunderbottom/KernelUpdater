@@ -1,4 +1,4 @@
-package io.arsenic.updater;
+package io.arsenic.updater.fragments;
 
 
 import android.app.Fragment;
@@ -15,6 +15,8 @@ import com.androidadvance.topsnackbar.TSnackbar;
 
 import java.util.Calendar;
 
+import io.arsenic.updater.BuildConfig;
+import io.arsenic.updater.R;
 import mehdi.sakout.aboutpage.AboutPage;
 import mehdi.sakout.aboutpage.Element;
 
