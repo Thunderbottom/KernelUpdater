@@ -5,47 +5,12 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MenuItem;
 
-import io.arsenic.updater.fragments.AboutFragment;
-import io.arsenic.updater.fragments.DownloadFragment;
 import io.arsenic.updater.fragments.HomeFragment;
 import io.arsenic.updater.utils.RootUtils;
 
 public class MainActivity extends AppCompatActivity {
-
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            selectFragment(item);
-            return false;
-        }
-
-    };
-
-    protected void selectFragment(MenuItem item) {
-
-        item.setChecked(true);
-
-        switch (item.getItemId()) {
-            case R.id.navigation_home:
-                // Action to perform when Home Menu item is selected.
-                pushFragment(new HomeFragment());
-                break;
-            case R.id.navigation_download:
-                pushFragment(new DownloadFragment());
-                break;
-            case R.id.navigation_about:
-                // Action to perform when Bag Menu item is selected.
-                pushFragment(new AboutFragment());
-                break;
-        }
-    }
 
 
     @Override
@@ -54,8 +19,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         new Task().execute();
         pushFragment(new HomeFragment());
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 
     protected void pushFragment(Fragment fragment) {
