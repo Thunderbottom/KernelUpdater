@@ -25,5 +25,5 @@
             app:itemBackground="@color/colorPrimaryDark"
             app:itemIconTint="@drawable/selector"
             app:itemTextColor="@drawable/selector"
-            app:layout_behavior=".BottomNavigationBehavior"/>
+            app:layout_behavior=".views.BottomNavigationBehavior"/>
 </android.support.design.widget.CoordinatorLayout>
