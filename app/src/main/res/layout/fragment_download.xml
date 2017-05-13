@@ -11,42 +11,36 @@
         <android.support.v7.widget.CardView
             android:id="@+id/card_view"
             android:layout_width="fill_parent"
-            android:layout_height="125dp"
-            android:layout_gravity="center"
-            android:layout_margin="5dp" >
-
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp">
                 <RelativeLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent">
-                <TextView
-                    android:id="@+id/versionSelectTextView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textStyle="bold"
-                    android:text="@string/versionSelect"
-                    android:layout_alignParentStart="true"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="32dp"
-                    />
+                    <TextView
+                        android:id="@+id/versionSelectTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textStyle="bold"
+                        android:layout_margin="8dp"
+                        android:text="@string/versionSelect"
+                        android:layout_centerHorizontal="true"/>
 
                     <Spinner
                         android:id="@+id/spinner"
-                        android:layout_width="266dp"
-                        android:layout_height="wrap_content"
-                        android:layout_toEndOf="@id/versionSelectTextView"
-                        android:layout_marginTop="32dp"/>
-
+                        android:layout_width="150dp"
+                        android:layout_height="30dp"
+                        android:layout_margin="8dp"
+                        android:layout_below="@+id/versionSelectTextView"
+                        android:layout_centerHorizontal="true"/>
                     <Button
                         android:id="@+id/button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
+                        android:layout_margin="8dp"
+                        android:layout_below="@+id/spinner"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginBottom="16dp"
                         android:text="@string/search" />
-                </RelativeLayout>
-
-
+            </RelativeLayout>
         </android.support.v7.widget.CardView>
 
     </FrameLayout>

@@ -10,4 +10,16 @@
         <item name="android:titleTextAppearance" tools:targetApi="23">@color/black</item>
     </style>
 
+    <style name="NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="23">true</item>
+    </style>
+
+    <style name="SplashTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="23">true</item>
+    </style>
+
 </resources>

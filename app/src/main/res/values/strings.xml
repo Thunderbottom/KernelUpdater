@@ -3,12 +3,23 @@
     <string name="title_home">Home</string>
     <string name="title_about">About</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="arsenic">Arsenic</string>
     <string name="easter_egg">This is just the beginning.</string>
     <string name="copyright">Copyrights %1$d</string>
     <string name="currentVersion">Current Kernel Version:</string>
     <string name="title_download">Downloads</string>
     <string name="versionSelect">Select Version</string>
     <string name="search">Search</string>
+    <string name="update_check_text">Tap to check for updates</string>
+    <string name="download_update_text">Download</string>
+    <string name="reboot_recovery_text">Reboot Recovery</string>
+    <string name="reboot_bootloader_text">Reboot Bootloader</string>
+    <string name="latestVersion">Latest Version Installed</string>
+    <string name="newerVersion">Newer version Available</string>
+    <string name="unknownVersion">Unknown Version of Arsenic Installed</string>
+    <string name="unknownKernel">Arsenic Kernel is not installed</string>
+    <string name="cannotCheckUpdate">Cannot check for updates</string>
+    <string name="failedUpdate">Failed to check for updates</string>
+    <string name="checkingUpdate">Checking for Updates</string>
+    <string name="update_url" />
 </resources>

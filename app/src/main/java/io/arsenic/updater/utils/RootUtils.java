@@ -46,7 +46,7 @@ public class RootUtils {
         chmod(file, permission, getSU());
     }
 
-    public static void chmod(String file, String permission, SU su) {
+    private static void chmod(String file, String permission, SU su) {
         su.runCommand("chmod " + permission + " " + file);
     }
 
@@ -58,7 +58,7 @@ public class RootUtils {
         mount(writeable, mountpoint, getSU());
     }
 
-    public static void mount(boolean writeable, String mountpoint, SU su) {
+    private static void mount(boolean writeable, String mountpoint, SU su) {
         su.runCommand(writeable ? "mount -o remount,rw " + mountpoint + " " + mountpoint :
                 "mount -o remount,ro " + mountpoint + " " + mountpoint);
         su.runCommand(writeable ? "mount -o remount,rw " + mountpoint :
@@ -70,11 +70,11 @@ public class RootUtils {
         su = null;
     }
 
-    public static String runCommand(String command) {
+    private static String runCommand(String command) {
         return getSU().runCommand(command);
     }
 
-    public static SU getSU() {
+    private static SU getSU() {
         if (su == null || su.closed || su.denied) {
             if (su != null && !su.closed) {
                 su.close();
@@ -88,7 +88,7 @@ public class RootUtils {
      * Based on AndreiLux's SU code in Synapse
      * https://github.com/AndreiLux/Synapse/blob/master/src/main/java/com/af/synapse/utils/Utils.java#L238
      */
-    public static class SU {
+    private static class SU {
 
         private Process mProcess;
         private BufferedWriter mWriter;
@@ -99,11 +99,11 @@ public class RootUtils {
         private boolean denied;
         private boolean firstTry;
 
-        public SU() {
+        SU() {
             this(true, null);
         }
 
-        public SU(boolean root, String tag) {
+        SU(boolean root, String tag) {
             mRoot = root;
             mTag = tag;
             try {
@@ -123,7 +123,7 @@ public class RootUtils {
             }
         }
 
-        public synchronized String runCommand(final String command) {
+        synchronized String runCommand(final String command) {
             synchronized (this) {
                 try {
                     StringBuilder sb = new StringBuilder();
@@ -160,7 +160,7 @@ public class RootUtils {
             }
         }
 
-        public void close() {
+        void close() {
             try {
                 if (mWriter != null) {
                     mWriter.write("exit\n");

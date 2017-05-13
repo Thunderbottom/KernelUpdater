@@ -4,5 +4,13 @@
     <color name="colorPrimaryDark">#eeeeee</color>
     <color name="colorAccent">#212121</color>
     <color name="black">#000000</color>
+    <color name="grey_600">#757575</color>
     <color name="grey_700">#616161</color>
+
+    <color name="red_500">#F44336</color>
+    <color name="green_500">#4CAF50</color>
+    <color name="grey_500">#9E9E9E</color>
+    <color name="blue_500">#2196F3</color>
+    <color name="yellow_500">#FFC107</color>
+
 </resources>
