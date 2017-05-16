@@ -238,7 +238,24 @@ public class HomeFragment extends Fragment {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
+        boolean networkAvailable = activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
+        if (!networkAvailable){
+            return false;
+        } else {
+            return checkConnection();
+        }
+    }
+
+    private boolean checkConnection() {
+        boolean isConnected = false;
+        try {
+            Process process = Runtime.getRuntime().exec("ping -c 1 www.google.com");
+            int returnVal = process.waitFor();
+            isConnected = (returnVal == 0);
+        } catch (Exception e) {
+            // Suppress error
+        }
+        return isConnected;
     }
 
     public void checkDir(){
