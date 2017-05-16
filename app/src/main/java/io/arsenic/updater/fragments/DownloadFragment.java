@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -33,7 +34,13 @@ public class DownloadFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         downloadView = inflater.inflate(R.layout.fragment_download, container, false);
-        initViews();
+        Button downloadButton = (Button) downloadView.findViewById(R.id.searchButton);
+        downloadButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                initViews();
+            }
+        });
         return downloadView;
     }
 
