@@ -1,13 +1,16 @@
 package io.arsenic.updater;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MenuItem;
+
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter;
 
 import io.arsenic.updater.fragments.AboutFragment;
 import io.arsenic.updater.fragments.DownloadFragment;
@@ -15,48 +18,58 @@ import io.arsenic.updater.fragments.HomeFragment;
 
 public class MainActivity extends AppCompatActivity {
 
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+    int app_theme, bg_color, accent_color;
 
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            selectFragment(item);
-            return false;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        SharedPreferences sp = getSharedPreferences("theme", Activity.MODE_PRIVATE);
+        if(sp.getInt("theme_id", 0) == 0) {
+            app_theme = R.style.AppTheme;
+            bg_color = ContextCompat.getColor(this, R.color.colorPrimary);
+            accent_color = ContextCompat.getColor(this, R.color.dark_colorPrimary);
         }
+        else {
+            app_theme = R.style.DarkAppTheme;
+            bg_color = ContextCompat.getColor(this, R.color.dark_colorPrimary);
+            accent_color = ContextCompat.getColor(this, R.color.colorPrimary);
+        }
+        setTheme(app_theme);
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        pushFragment(new HomeFragment());
+        AHBottomNavigation navigation = (AHBottomNavigation) findViewById(R.id.bottom_navigation);
+        navigation.setDefaultBackgroundColor(bg_color);
+        navigation.setAccentColor(accent_color);
+        AHBottomNavigationAdapter navigationAdapter = new AHBottomNavigationAdapter(this, R.menu.navigation);
+        navigationAdapter.setupWithBottomNavigation(navigation);
+        navigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
+            @Override
+            public boolean onTabSelected(int position, boolean wasSelected) {
+                selectFragment(position);
+                return true;
+            }
 
-    };
+        });
+    }
 
-    protected void selectFragment(MenuItem item) {
-
-        item.setChecked(true);
-
-        switch (item.getItemId()) {
-            case R.id.navigation_home:
+    protected void selectFragment(int item) {
+        switch (item) {
+            case 0:
                 pushFragment(new HomeFragment());
                 break;
-            case R.id.navigation_download:
+            case 1:
                 pushFragment(new DownloadFragment());
                 break;
-            case R.id.navigation_about:
+            case 2:
                 pushFragment(new AboutFragment());
                 break;
         }
     }
 
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        pushFragment(new HomeFragment());
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-    }
-
     protected void pushFragment(Fragment fragment) {
         if (fragment == null)
             return;
-
         FragmentManager fragmentManager = getFragmentManager();
         if (fragmentManager != null) {
             FragmentTransaction ft = fragmentManager.beginTransaction();
@@ -66,7 +79,5 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
-
 
 }

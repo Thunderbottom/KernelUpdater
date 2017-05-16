@@ -2,9 +2,11 @@ package io.arsenic.updater;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.AppCompatDelegate;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,14 +18,25 @@ import io.arsenic.updater.utils.RootUtils;
 
 public class ArsenicSplash extends Activity {
 
-    private static String UPDATE_JSON = "";
     private static int updateValue = -2;
+    private int app_theme;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        SharedPreferences sp = getSharedPreferences("theme", Activity.MODE_PRIVATE);
+        if(sp.getInt("theme_id", 0) == 0) {
+            app_theme = R.style.SplashTheme;
+            AppCompatDelegate.setDefaultNightMode(
+                    AppCompatDelegate.MODE_NIGHT_NO);
+        }
+        else {
+            app_theme = R.style.SplashThemeDark;
+            AppCompatDelegate.setDefaultNightMode(
+                    AppCompatDelegate.MODE_NIGHT_YES);
+        }
+        setTheme(app_theme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_arsenic_splash);
-        UPDATE_JSON = getResources().getString(R.string.update_url); // Add URL -> R.string.update_url
         new UpdateTask().execute();
         new Handler().postDelayed(new Runnable(){
             public void run() {
@@ -44,7 +57,7 @@ public class ArsenicSplash extends Activity {
             String currentKernelVersion = ArsenicUpdater
                     .getKernelVersion()
                     .replaceAll("\\D+", "");
-            String jsonStr = JSONService.request(UPDATE_JSON, JSONService.GET);
+            String jsonStr = JSONService.request(getResources().getString(R.string.update_url), JSONService.GET);
             try {
                 JSONObject json = new JSONObject(jsonStr);
                 JSONObject kernel = json.getJSONObject("kernel");
