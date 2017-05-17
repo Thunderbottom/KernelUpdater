@@ -74,7 +74,7 @@ public class RootUtils {
         return getSU().runCommand(command);
     }
 
-    private static SU getSU() {
+    public static SU getSU() {
         if (su == null || su.closed || su.denied) {
             if (su != null && !su.closed) {
                 su.close();
@@ -88,7 +88,7 @@ public class RootUtils {
      * Based on AndreiLux's SU code in Synapse
      * https://github.com/AndreiLux/Synapse/blob/master/src/main/java/com/af/synapse/utils/Utils.java#L238
      */
-    private static class SU {
+    public static class SU {
 
         private Process mProcess;
         private BufferedWriter mWriter;
@@ -123,7 +123,7 @@ public class RootUtils {
             }
         }
 
-        synchronized String runCommand(final String command) {
+        public synchronized String runCommand(final String command) {
             synchronized (this) {
                 try {
                     StringBuilder sb = new StringBuilder();

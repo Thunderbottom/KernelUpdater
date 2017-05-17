@@ -1,25 +1,120 @@
 <resources>
-    <string name="app_name">Arsenic Updater</string>
-    <string name="title_home">Home</string>
-    <string name="title_about">About</string>
+    <string name="arsenic">
+        Arsenic
+    </string>
+    <string name="app_name">
+        Arsenic Updater
+    </string>
+    <string name="kernelDownloader">
+        Arsenic Kernel Downloader
+    </string>
 
-    <string name="arsenic">Arsenic</string>
-    <string name="easter_egg">Woosh!</string>
-    <string name="copyright">Copyrights %1$d</string>
-    <string name="currentVersion">Current Kernel Version:</string>
-    <string name="title_download">Downloads</string>
-    <string name="versionSelect">Select Version</string>
-    <string name="search">Search</string>
-    <string name="update_check_text">Tap to check for updates</string>
-    <string name="download_update_text">Download</string>
-    <string name="reboot_recovery_text">Reboot Recovery</string>
-    <string name="reboot_bootloader_text">Reboot Bootloader</string>
-    <string name="latestVersion">Latest Version Installed</string>
-    <string name="newerVersion">Newer version Available</string>
-    <string name="unknownVersion">Unknown Version of Arsenic Installed</string>
-    <string name="unknownKernel">Arsenic Kernel is not installed</string>
-    <string name="cannotCheckUpdate">Cannot check for updates</string>
-    <string name="failedUpdate">Failed to check for updates</string>
-    <string name="checkingUpdate">Checking for Updates</string>
-    <string name="update_url" />
+    <!-- Home -->
+    <string name="title_home">
+        Home
+    </string>
+    <string name="currentVersion">
+        Current Kernel Version:
+    </string>
+    <string name="latestVersion">
+        Latest Version Installed
+    </string>
+    <string name="newerVersion">
+        Newer version Available
+    </string>
+    <string name="unknownVersion">
+        Unknown Version of Arsenic Installed
+    </string>
+    <string name="unknownKernel">
+        Arsenic Kernel is not installed
+    </string>
+    <string name="cannotCheckUpdate">
+        Cannot check for updates
+    </string>
+    <string name="failedUpdate">
+        Failed to check for updates
+    </string>
+    <string name="checkingUpdate">
+        Checking for Updates
+    </string>
+
+    <!-- Download -->
+    <string name="title_download">
+        Downloads
+    </string>
+    <string name="versionSelect">
+        Select Version
+    </string>
+    <string name="search">
+        Search
+    </string>
+    <string name="update_check_text">
+        Tap to check for updates
+    </string>
+    <string name="download_update_text">
+        Download
+    </string>
+
+    <!-- About -->
+    <string name="about_desc">
+        Arsenic Kernel, made by Nimit Mehta.
+        \nThis is a supporting application which allows users to update to the latest version of Arsenic.
+    </string>
+    <string name="title_about">
+        About
+    </string>
+    <string name="easter_egg">
+        Woosh!
+    </string>
+
+    <!-- Storage -->
+    <string name="update_url">
+        https://raw.githubusercontent.com/Thunderbottom/test/master/update.json
+    </string>
+    <string name="updateLocation">
+        /.arsenicupdater/
+    </string>
+    <string name="downloadLocation">
+        /.arsenicupdater/downloads/
+    </string>
+    <string name="createFailed">
+        Failed to create directory
+    </string>
+
+    <!-- Downloads -->
+    <string name="downloadingUpdate">
+        Downloading Update
+    </string>
+    <string name="downloadFailed">
+        Download Failed.
+    </string>
+    <string name="downloadComplete">
+        Download Complete.
+    </string>
+    <string name="downloadCanceled">
+        Download Canceled.
+    </string>
+    <string name="kernelVersionFail">
+        Failed to get kernel versions
+    </string>
+
+    <!-- Recovery -->
+    <string name="reboot_recovery_text">
+        Reboot Recovery
+    </string>
+    <string name="reboot_bootloader_text">
+        Reboot Bootloader
+    </string>
+    <string name="rebootConfirm">
+        Are you sure you want to reboot?
+    </string>
+
+    <!-- Installation-->
+    <string name="flashKernel">
+        Kernel Downloaded
+    </string>
+    <string name="flashConfirm">
+        Do you want to flash the downloaded kernel?
+    </string>
+
 </resources>

@@ -19,11 +19,12 @@ import io.arsenic.updater.utils.RootUtils;
 public class ArsenicSplash extends Activity {
 
     private static int updateValue = -2;
-    private int app_theme;
+    String remoteKernelVersion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         SharedPreferences sp = getSharedPreferences("theme", Activity.MODE_PRIVATE);
+        int app_theme;
         if(sp.getInt("theme_id", 0) == 0) {
             app_theme = R.style.SplashTheme;
             AppCompatDelegate.setDefaultNightMode(
@@ -60,8 +61,21 @@ public class ArsenicSplash extends Activity {
             String jsonStr = JSONService.request(getResources().getString(R.string.update_url), JSONService.GET);
             try {
                 JSONObject json = new JSONObject(jsonStr);
-                JSONObject kernel = json.getJSONObject("kernel");
-                String remoteKernelVersion = kernel.getString("version");
+                ArsenicUpdater.setJSON(json);
+                if(ArsenicUpdater.getKernelVersion().contains("lineage")) {
+                    JSONObject OS = json.getJSONObject("Lineage");
+                    remoteKernelVersion = OS.getString("version");
+                    ArsenicUpdater.setDownloadURL(OS.getString("link"));
+                }
+                else if (ArsenicUpdater.getKernelVersion().contains("aosp") || currentKernelVersion.equals("34032")) {
+                    JSONObject OS = json.getJSONObject("AOSP");
+                    remoteKernelVersion = OS.getString("version");
+                    ArsenicUpdater.setDownloadURL(OS.getString("link"));
+                }
+                else {
+                    ArsenicUpdater.setUpdateValue(-3);
+                    return null;
+                }
                 if (Integer.parseInt(remoteKernelVersion) > Integer.parseInt(currentKernelVersion))
                     updateValue = 1;
                 else if (Integer.parseInt(remoteKernelVersion) < Integer.parseInt(currentKernelVersion))
