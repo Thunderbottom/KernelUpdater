@@ -21,5 +21,6 @@
     <string name="cannotCheckUpdate">Cannot check for updates</string>
     <string name="failedUpdate">Failed to check for updates</string>
     <string name="checkingUpdate">Checking for Updates</string>
-    <string name="update_url" />
+    <!-- Test Update JSON, will be removed in final version-->
+    <string name="update_url">https://raw.githubusercontent.com/Thunderbottom/test/master/update.json</string>
 </resources>

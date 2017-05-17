@@ -19,11 +19,11 @@ import io.arsenic.updater.utils.RootUtils;
 public class ArsenicSplash extends Activity {
 
     private static int updateValue = -2;
-    private int app_theme;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         SharedPreferences sp = getSharedPreferences("theme", Activity.MODE_PRIVATE);
+        int app_theme;
         if(sp.getInt("theme_id", 0) == 0) {
             app_theme = R.style.SplashTheme;
             AppCompatDelegate.setDefaultNightMode(
@@ -60,6 +60,7 @@ public class ArsenicSplash extends Activity {
             String jsonStr = JSONService.request(getResources().getString(R.string.update_url), JSONService.GET);
             try {
                 JSONObject json = new JSONObject(jsonStr);
+                ArsenicUpdater.setJSON(json);
                 JSONObject kernel = json.getJSONObject("kernel");
                 String remoteKernelVersion = kernel.getString("version");
                 if (Integer.parseInt(remoteKernelVersion) > Integer.parseInt(currentKernelVersion))

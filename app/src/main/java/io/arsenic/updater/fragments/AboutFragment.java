@@ -12,8 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import java.util.Calendar;
-
 import io.arsenic.updater.BuildConfig;
 import io.arsenic.updater.R;
 import mehdi.sakout.aboutpage.AboutPage;
@@ -33,7 +31,9 @@ public class AboutFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Element versionElement = new Element();
-        versionElement.setTitle(BuildConfig.VERSION_NAME);
+        versionElement
+                .setTitle("v" + BuildConfig.VERSION_NAME)
+                .setGravity(Gravity.CENTER);
         versionElement.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -58,32 +58,15 @@ public class AboutFragment extends Fragment {
                 //.setDescription(R.string.about_desc)
                 .isRTL(false)
                 .setImage(R.mipmap.ic_launcher)
-                .addItem(versionElement)
                 .addGroup("Connect with us")
                 .addEmail("nimitmehta95@gmail.com")
                 .addWebsite("http://checkyourscreen.me")
                 .addTwitter("Th3_0bserver")
                 .addGitHub("thunderbottom/ArsenicUpdater")
-                .addItem(getCopyRightsElement())
+                .addItem(versionElement)
                 .create();
     }
 
-    Element getCopyRightsElement() {
-        Element copyRightsElement = new Element();
-        final String copyrights = String.format(getString(R.string.copyright), Calendar.getInstance().get(Calendar.YEAR));
-        copyRightsElement.setTitle(copyrights);
-        copyRightsElement.setIconDrawable(R.drawable.about_copyright);
-        copyRightsElement.setIconTint(mehdi.sakout.aboutpage.R.color.about_item_icon_color);
-        copyRightsElement.setIconNightTint(android.R.color.white);
-        copyRightsElement.setGravity(Gravity.CENTER);
-        copyRightsElement.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getActivity(), copyrights, Toast.LENGTH_SHORT).show();
-            }
-        });
-        return copyRightsElement;
-    }
 
     int getThemeId() {
         TypedValue outValue = new TypedValue();

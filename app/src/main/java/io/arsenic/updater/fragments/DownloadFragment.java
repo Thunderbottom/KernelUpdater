@@ -5,24 +5,31 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.List;
 
 import io.arsenic.updater.R;
+import io.arsenic.updater.utils.ArsenicUpdater;
 import io.arsenic.updater.views.DataAdapter;
 
 
-public class DownloadFragment extends Fragment {
+public class DownloadFragment extends Fragment{
 
-    private ArrayList<String> arsenic_list;
     View downloadView;
+    Button searchButton;
+    private Spinner downloadSpinner;
 
     public DownloadFragment() {
         // Required empty public constructor
@@ -34,58 +41,45 @@ public class DownloadFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         downloadView = inflater.inflate(R.layout.fragment_download, container, false);
-        Button downloadButton = (Button) downloadView.findViewById(R.id.searchButton);
-        downloadButton.setOnClickListener(new View.OnClickListener() {
+        downloadSpinner = (Spinner) downloadView.findViewById(R.id.spinner);
+        try {
+            getVersions();
+        } catch (JSONException ignored) {
+            Toast.makeText(getContext(), "Failed to get kernel versions", Toast.LENGTH_SHORT).show();
+        }
+        searchButton = (Button) downloadView.findViewById(R.id.searchButton);
+        searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                initViews();
+                try {
+                    initViews(downloadSpinner.getSelectedItemPosition());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
         return downloadView;
     }
 
-    private void initViews(){
+    private void initViews(int position) throws JSONException {
         RecyclerView recyclerView = (RecyclerView) downloadView.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
-        arsenic_list = new ArrayList<>();
-        arsenic_list.add("r32");
-        arsenic_list.add("r44");
-        arsenic_list.add("r46");
+        ArrayList<String> arsenic_list = ArsenicUpdater.getKernelVersionList(position);
         RecyclerView.Adapter<DataAdapter.ViewHolder> adapter = new DataAdapter(arsenic_list);
         recyclerView.setAdapter(adapter);
-
-        recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
-            GestureDetector gestureDetector = new GestureDetector(getActivity().getApplicationContext(), new GestureDetector.SimpleOnGestureListener() {
-
-                @Override public boolean onSingleTapUp(MotionEvent e) {
-                    return true;
-                }
-
-            });
-            @Override
-            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
-
-                View child = rv.findChildViewUnder(e.getX(), e.getY());
-                if(child != null && gestureDetector.onTouchEvent(e)) {
-                    int position = rv.getChildAdapterPosition(child);
-                    Toast.makeText(getActivity().getApplicationContext(), arsenic_list.get(position), Toast.LENGTH_SHORT).show();
-                }
-
-                return false;
-            }
-
-            @Override
-            public void onTouchEvent(RecyclerView rv, MotionEvent e) {
-
-            }
-
-            @Override
-            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
-            }
-        });
     }
 
+    public void getVersions() throws JSONException {
+        JSONArray versions = ArsenicUpdater.getJSON().getJSONArray("versions");
+        List<String> version_list = new ArrayList<>();
+        for(int i = 0; i < versions.length(); i ++){
+            JSONObject kernel_versions = versions.getJSONObject(i);
+            version_list.add(kernel_versions.get("kernel_version").toString());
+        }
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, version_list);
+        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        downloadSpinner.setAdapter(spinnerAdapter);
+    }
 }
