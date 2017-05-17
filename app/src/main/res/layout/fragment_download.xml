@@ -33,8 +33,9 @@
 
                     <Spinner
                         android:id="@+id/spinner"
-                        android:layout_width="150dp"
-                        android:layout_height="30dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:padding="4dp"
                         android:layout_margin="8dp"
                         android:layout_below="@+id/versionSelectTextView"
                         android:layout_centerHorizontal="true"/>

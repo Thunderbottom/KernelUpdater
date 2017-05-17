@@ -55,7 +55,7 @@ public class AboutFragment extends Fragment {
         });
 
         return new AboutPage(getActivity())
-                //.setDescription(R.string.about_desc)
+                .setDescription(getString(R.string.about_desc))
                 .isRTL(false)
                 .setImage(R.mipmap.ic_launcher)
                 .addGroup("Connect with us")

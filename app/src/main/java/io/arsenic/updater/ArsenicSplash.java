@@ -19,6 +19,7 @@ import io.arsenic.updater.utils.RootUtils;
 public class ArsenicSplash extends Activity {
 
     private static int updateValue = -2;
+    String remoteKernelVersion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,8 +62,20 @@ public class ArsenicSplash extends Activity {
             try {
                 JSONObject json = new JSONObject(jsonStr);
                 ArsenicUpdater.setJSON(json);
-                JSONObject kernel = json.getJSONObject("kernel");
-                String remoteKernelVersion = kernel.getString("version");
+                if(ArsenicUpdater.getKernelVersion().contains("lineage")) {
+                    JSONObject OS = json.getJSONObject("Lineage");
+                    remoteKernelVersion = OS.getString("version");
+                    ArsenicUpdater.setDownloadURL(OS.getString("link"));
+                }
+                else if (ArsenicUpdater.getKernelVersion().contains("aosp") || currentKernelVersion.equals("34032")) {
+                    JSONObject OS = json.getJSONObject("AOSP");
+                    remoteKernelVersion = OS.getString("version");
+                    ArsenicUpdater.setDownloadURL(OS.getString("link"));
+                }
+                else {
+                    ArsenicUpdater.setUpdateValue(-3);
+                    return null;
+                }
                 if (Integer.parseInt(remoteKernelVersion) > Integer.parseInt(currentKernelVersion))
                     updateValue = 1;
                 else if (Integer.parseInt(remoteKernelVersion) < Integer.parseInt(currentKernelVersion))

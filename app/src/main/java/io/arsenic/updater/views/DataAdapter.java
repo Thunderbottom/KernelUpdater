@@ -12,12 +12,14 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import io.arsenic.updater.R;
+import io.arsenic.updater.fragments.DownloadFragment;
 import io.arsenic.updater.utils.ArsenicUpdater;
 
 public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
     private ArrayList<String> arsenic_version;
     private ArrayList<String> downloadList;
     private Button downloadButton;
+    private View view;
 
     public DataAdapter(ArrayList<String> countries) {
         this.arsenic_version = countries;
@@ -25,7 +27,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
 
     @Override
     public DataAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_row, viewGroup, false);
+        view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_row, viewGroup, false);
         return new ViewHolder(view);
     }
 
@@ -35,9 +37,13 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
         downloadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                downloadList = ArsenicUpdater.getDownloadList();
-                // TODO: Downloader and Updater
-                Toast.makeText(v.getContext(), "Downloading " + downloadList.get(viewHolder.getAdapterPosition()), Toast.LENGTH_SHORT).show();
+                if (ArsenicUpdater.getStoragePermission(view.getContext())) {
+                    downloadList = ArsenicUpdater.getDownloadList();
+                    DownloadFragment df = new DownloadFragment();
+                    df.downloadFile(downloadList.get(viewHolder.getAdapterPosition()));
+                }
+                else
+                    Toast.makeText(view.getContext(), v.getContext().getString(R.string.downloadFailed), Toast.LENGTH_SHORT).show();
             }
         });
     }
