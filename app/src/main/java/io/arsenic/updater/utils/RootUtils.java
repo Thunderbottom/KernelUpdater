@@ -28,9 +28,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
-/**
- * Created by willi on 30.12.15.
- */
 public class RootUtils {
 
     private static SU su;

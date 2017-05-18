@@ -17,25 +17,20 @@ public class JSONService {
     /**
      * Making web service call
      *
-     * @url - url to make request
-     * @requestmethod - http request method
+     * @param url - url to make request
+     * @param method - http request method
      */
     public static String request(String url, int method) {
         return request(url, method, null, true);
     }
 
-    public static String request(String url, int method, boolean newline) {
-        return request(url, method, null, newline);
-    }
-
     /**
      * Making service call
      *
-     * @url - url to make request
-     * @requestmethod - http request method
-     * @params - http request params
-     * @header - http request header
-     * @newline - true to append a newline each line
+     * @param urlAddress - url to make request
+     * @param method - http request method
+     * @param header - http request header
+     * @param newline - true to append a newline each line
      */
     private static String request(String urlAddress, int method,
                                   Map<String, String> header, boolean newline) {

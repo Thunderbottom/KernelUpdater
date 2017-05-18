@@ -18,7 +18,9 @@ import io.arsenic.updater.fragments.HomeFragment;
 
 public class MainActivity extends AppCompatActivity {
 
-    int app_theme, bg_color, accent_color;
+    int app_theme;
+    int bg_color;
+    int accent_color;
 
 
     @Override
@@ -79,5 +81,4 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
 }
