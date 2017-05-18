@@ -45,7 +45,6 @@ public class ArsenicUtils {
     /**
      * Takes raw kernel version and formats it using a regex to readable format
      * @param rawKernelVersion kernel version as read from /proc/version
-     * @return String formatted kernel version
      * */
     private static void formatKernelVersion(String rawKernelVersion) {
         // Example (see tests for more):

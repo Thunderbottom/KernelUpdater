@@ -17,7 +17,7 @@ import io.arsenic.updater.utils.ArsenicUpdater;
 
 public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
     private ArrayList<String> arsenic_version;
-    private ArrayList<String> downloadList;
+    private ArrayList downloadList;
     private Button downloadButton;
     private View view;
 
@@ -40,10 +40,12 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
                 if (ArsenicUpdater.getStoragePermission(view.getContext())) {
                     downloadList = ArsenicUpdater.getDownloadList();
                     DownloadFragment df = new DownloadFragment();
-                    df.downloadFile(downloadList.get(viewHolder.getAdapterPosition()));
+                    df.downloadFile((String) downloadList.get(viewHolder.getAdapterPosition()));
                 }
                 else
-                    Toast.makeText(view.getContext(), v.getContext().getString(R.string.downloadFailed), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(view.getContext(),
+                            v.getContext().getString(R.string.download_failed),
+                            Toast.LENGTH_SHORT).show();
             }
         });
     }

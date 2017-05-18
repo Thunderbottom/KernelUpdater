@@ -1,120 +1,62 @@
 <resources>
-    <string name="arsenic">
-        Arsenic
-    </string>
-    <string name="app_name">
-        Arsenic Updater
-    </string>
-    <string name="kernelDownloader">
-        Arsenic Kernel Downloader
-    </string>
+    <string name="arsenic">Arsenic</string>
+    <string name="app_name">Arsenic Updater</string>
+    <string name="kernelDownloader">Arsenic Kernel Downloader</string>
 
     <!-- Home -->
-    <string name="title_home">
-        Home
-    </string>
-    <string name="currentVersion">
-        Current Kernel Version:
-    </string>
-    <string name="latestVersion">
-        Latest Version Installed
-    </string>
-    <string name="newerVersion">
-        Newer version Available
-    </string>
-    <string name="unknownVersion">
-        Unknown Version of Arsenic Installed
-    </string>
-    <string name="unknownKernel">
-        Arsenic Kernel is not installed
-    </string>
-    <string name="cannotCheckUpdate">
-        Cannot check for updates
-    </string>
-    <string name="failedUpdate">
-        Failed to check for updates
-    </string>
-    <string name="checkingUpdate">
-        Checking for Updates
-    </string>
+    <string name="title_home">Home</string>
+    <string name="current_version">Current Kernel Version:</string>
+    <string name="latest_version">Latest Version Installed</string>
+    <string name="newer_version">Newer version Available</string>
+    <string name="unknown_version">Unknown Version of Arsenic Installed</string>
+    <string name="unknown_kernel">Arsenic Kernel is not installed</string>
+    <string name="cannot_check_for_update">Cannot check for updates</string>
+    <string name="failed_update_check">Failed to check for updates</string>
+    <string name="checking_update">Checking for Updates</string>
 
     <!-- Download -->
-    <string name="title_download">
-        Downloads
-    </string>
-    <string name="versionSelect">
-        Select Version
-    </string>
-    <string name="search">
-        Search
-    </string>
-    <string name="update_check_text">
-        Tap to check for updates
-    </string>
-    <string name="download_update_text">
-        Download
-    </string>
+    <string name="title_download">Downloads</string>
+    <string name="version_select">Select Version</string>
+    <string name="search">Search</string>
+    <string name="update_check_text">Tap to check for updates</string>
+    <string name="download_update_text">Download</string>
 
     <!-- About -->
     <string name="about_desc">
         Arsenic Kernel, made by Nimit Mehta.
         \nThis is a supporting application which allows users to update to the latest version of Arsenic.
     </string>
-    <string name="title_about">
-        About
-    </string>
-    <string name="easter_egg">
-        Woosh!
-    </string>
+    <string name="title_about">About</string>
+    <string name="easter_egg">Woosh!</string>
+    <string name="connect_with_us">Connect with us</string>
+    <string name="nimit_email" translatable="false">nimitmehta95@gmail.com</string>
+    <string name="nimit_website" translatable="false">http://checkyourscreen.me</string>
+    <string name="nimit_twitter" translatable="false">Th3_0bserver</string>
+    <string name="updater_github" translatable="false">thunderbottom/ArsenicUpdater</string>
 
     <!-- Storage -->
-    <string name="update_url">
+    <string name="update_url" translatable="false">
         https://raw.githubusercontent.com/Thunderbottom/test/master/update.json
     </string>
-    <string name="updateLocation">
-        /.arsenicupdater/
-    </string>
-    <string name="downloadLocation">
-        /.arsenicupdater/downloads/
-    </string>
-    <string name="createFailed">
-        Failed to create directory
-    </string>
+    <string name="update_location" translatable="false">/.arsenicupdater/</string>
+    <string name="download_location" translatable="false">/.arsenicupdater/downloads/</string>
+    <string name="create_failed">Failed to create directory</string>
 
     <!-- Downloads -->
-    <string name="downloadingUpdate">
-        Downloading Update
-    </string>
-    <string name="downloadFailed">
-        Download Failed.
-    </string>
-    <string name="downloadComplete">
-        Download Complete.
-    </string>
-    <string name="downloadCanceled">
-        Download Canceled.
-    </string>
-    <string name="kernelVersionFail">
-        Failed to get kernel versions
-    </string>
+    <string name="downloading_update">Downloading Update</string>
+    <string name="download_failed">Download Failed.</string>
+    <string name="download_complete">Download Complete.</string>
+    <string name="download_canceled">Download Canceled.</string>
+    <string name="kernel_version_fail">Failed to get kernel versions</string>
 
     <!-- Recovery -->
-    <string name="reboot_recovery_text">
-        Reboot Recovery
-    </string>
-    <string name="reboot_bootloader_text">
-        Reboot Bootloader
-    </string>
-    <string name="rebootConfirm">
-        Are you sure you want to reboot?
-    </string>
+    <string name="reboot_recovery_text">Reboot Recovery</string>
+    <string name="reboot_bootloader_text">Reboot Bootloader</string>
+    <string name="reboot_confirm">Are you sure you want to reboot?</string>
 
     <!-- Installation-->
-    <string name="flashKernel">
-        Kernel Downloaded
-    </string>
-    <string name="flashConfirm">
-        Do you want to flash the downloaded kernel?
-    </string>
+    <string name="flash_kernel">Kernel Downloaded</string>
+    <string name="flash_confirm">Do you want to flash the downloaded kernel?</string>
+    <string name="root_permissions_denied">Root permissions denied!</string>
 
 </resources>

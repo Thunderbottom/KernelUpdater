@@ -28,7 +28,7 @@
                         android:layout_height="wrap_content"
                         android:textStyle="bold"
                         android:layout_margin="8dp"
-                        android:text="@string/versionSelect"
+                        android:text="@string/version_select"
                         android:layout_centerHorizontal="true"/>
 
                     <Spinner

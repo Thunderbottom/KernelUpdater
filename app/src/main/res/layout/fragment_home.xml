@@ -32,7 +32,7 @@
                             android:layout_marginTop="4dp"
                             android:padding="8dp"
                             android:textStyle="bold"
-                            android:text="@string/currentVersion" />
+                            android:text="@string/current_version" />
 
                         <TextView
                             android:id="@+id/kvTextView"

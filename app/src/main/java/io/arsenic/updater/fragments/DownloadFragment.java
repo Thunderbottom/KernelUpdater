@@ -69,7 +69,7 @@ public class DownloadFragment extends Fragment{
         try {
             getVersions();
         } catch (JSONException ignored) {
-            Toast.makeText(getContext(), getString(R.string.kernelVersionFail), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.kernel_version_fail), Toast.LENGTH_SHORT).show();
         }
         searchButton = (Button) downloadView.findViewById(R.id.searchButton);
         searchButton.setOnClickListener(new View.OnClickListener() {
@@ -91,7 +91,7 @@ public class DownloadFragment extends Fragment{
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
         ArrayList<String> arsenic_list = ArsenicUpdater.getKernelVersionList(position);
-        RecyclerView.Adapter<DataAdapter.ViewHolder> adapter = new DataAdapter(arsenic_list);
+        RecyclerView.Adapter<DataAdapter.ViewHolder > adapter = new DataAdapter(arsenic_list);
         recyclerView.setAdapter(adapter);
     }
 
@@ -109,16 +109,17 @@ public class DownloadFragment extends Fragment{
 
     public void downloadFile(String URL){
         filename = URLUtil.guessFileName(URL, null, MimeTypeMap.getFileExtensionFromUrl(URL));
-        File alreadyExist = new File(getExternalStorageDirectory() + getString(R.string.downloadLocation), filename);
+        File alreadyExist = new File(getExternalStorageDirectory() + getString(R.string.download_location),
+                filename);
         if(!alreadyExist.exists()) {
             notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
             notification = new NotificationCompat.Builder(getActivity());
             notification.setContentTitle(getString(R.string.kernelDownloader))
-                    .setContentText(getString(R.string.downloadingUpdate))
+                    .setContentText(getString(R.string.downloading_update))
                     .setSmallIcon(R.drawable.app_icon)
                     .setColor(ContextCompat.getColor(getContext(), R.color.blue_500));
             mProgressDialog = new ProgressDialog(getActivity());
-            mProgressDialog.setMessage(getString(R.string.downloadingUpdate));
+            mProgressDialog.setMessage(getString(R.string.downloading_update));
             mProgressDialog.setIndeterminate(true);
             mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
             mProgressDialog.setCancelable(true);
@@ -128,7 +129,7 @@ public class DownloadFragment extends Fragment{
                 @Override
                 public void onCancel(DialogInterface dialog) {
                     downloadTask.cancel(true);
-                    notification.setContentText(getString(R.string.downloadCanceled));
+                    notification.setContentText(getString(R.string.download_canceled));
                     notification.setProgress(0, 0, false);
                     notificationManager.notify(1, notification.build());
                 }
@@ -140,15 +141,15 @@ public class DownloadFragment extends Fragment{
     }
 
     public void checkDir(){
-        File folder = new File(getExternalStorageDirectory() + getString(R.string.updateLocation));
+        File folder = new File(getExternalStorageDirectory() + getString(R.string.update_location));
         boolean success = true;
         if (!folder.exists()) {
             success = folder.mkdir();
         }
         if (!success) {
             downloadTask.cancel(true);
-            Toast.makeText(getContext(), getString(R.string.createFailed), Toast.LENGTH_SHORT).show();
-            notification.setContentText(getString(R.string.downloadFailed));
+            Toast.makeText(getContext(), getString(R.string.create_failed), Toast.LENGTH_SHORT).show();
+            notification.setContentText(getString(R.string.download_failed));
             notification.setProgress(0, 0, false);
             notificationManager.notify(1, notification.build());
         }
@@ -184,7 +185,9 @@ public class DownloadFragment extends Fragment{
                 // download the file
                 checkDir();
                 input = connection.getInputStream();
-                filename = getExternalStorageDirectory() + getString(R.string.downloadLocation) + URLUtil.guessFileName(url.toString(), null, MimeTypeMap.getFileExtensionFromUrl(url.toString()));
+                filename = getExternalStorageDirectory() + getString(R.string.download_location) +
+                        URLUtil.guessFileName(url.toString(), null,
+                                MimeTypeMap.getFileExtensionFromUrl(url.toString()));
                 output = new FileOutputStream(filename);
                 byte data[] = new byte[4096];
                 long total = 0;
@@ -246,11 +249,11 @@ public class DownloadFragment extends Fragment{
             mProgressDialog.dismiss();
             if (result != null) {
                 Toast.makeText(context, "Download error: " + result, Toast.LENGTH_LONG).show();
-                notification.setContentText(getString(R.string.downloadFailed));
+                notification.setContentText(getString(R.string.download_failed));
             }
             else {
-                Toast.makeText(context, getString(R.string.downloadComplete), Toast.LENGTH_SHORT).show();
-                notification.setContentText(getString(R.string.downloadComplete));
+                Toast.makeText(context, getString(R.string.download_complete), Toast.LENGTH_SHORT).show();
+                notification.setContentText(getString(R.string.download_complete));
                 ArsenicUpdater.flashFile(getContext(), filename);
             }
             notification.setProgress(0, 0, false);
