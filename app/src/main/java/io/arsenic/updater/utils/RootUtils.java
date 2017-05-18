@@ -41,39 +41,6 @@ public class RootUtils {
         return !su.denied;
     }
 
-
-    public static void chmod(String file, String permission) {
-        chmod(file, permission, getSU());
-    }
-
-    private static void chmod(String file, String permission, SU su) {
-        su.runCommand("chmod " + permission + " " + file);
-    }
-
-    public static String getProp(String prop) {
-        return runCommand("getprop " + prop);
-    }
-
-    public static void mount(boolean writeable, String mountpoint) {
-        mount(writeable, mountpoint, getSU());
-    }
-
-    private static void mount(boolean writeable, String mountpoint, SU su) {
-        su.runCommand(writeable ? "mount -o remount,rw " + mountpoint + " " + mountpoint :
-                "mount -o remount,ro " + mountpoint + " " + mountpoint);
-        su.runCommand(writeable ? "mount -o remount,rw " + mountpoint :
-                "mount -o remount,ro " + mountpoint);
-    }
-
-    public static void closeSU() {
-        if (su != null) su.close();
-        su = null;
-    }
-
-    private static String runCommand(String command) {
-        return getSU().runCommand(command);
-    }
-
     public static SU getSU() {
         if (su == null || su.closed || su.denied) {
             if (su != null && !su.closed) {
