@@ -116,5 +116,6 @@
     <string name="flashConfirm">
         Do you want to flash the downloaded kernel?
     </string>
+    <string name="rootDenied">Root Access Denied</string>
 
 </resources>

@@ -38,16 +38,23 @@ public class ArsenicSplash extends Activity {
         setTheme(app_theme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_arsenic_splash);
-        new UpdateTask().execute();
-        new Handler().postDelayed(new Runnable(){
-            public void run() {
-                Intent intent = new Intent(ArsenicSplash.this, MainActivity.class)
-                        .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                        .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                ArsenicSplash.this.startActivity(intent);
-                ArsenicSplash.this.finish();
-            }
-        }, 2500);
+        if (!RootUtils.rootAccess()) {
+            Intent intent = new Intent(ArsenicSplash.this, DeniedRootActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
+        else {
+            new UpdateTask().execute();
+            new Handler().postDelayed(new Runnable() {
+                public void run() {
+                    Intent intent = new Intent(ArsenicSplash.this, MainActivity.class)
+                            .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                            .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    ArsenicSplash.this.startActivity(intent);
+                    ArsenicSplash.this.finish();
+                }
+            }, 2500);
+        }
     }
 
 
@@ -89,10 +96,6 @@ public class ArsenicSplash extends Activity {
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            if (!RootUtils.rootAccess()) {
-                //TODO: Add a blank activity showing no root access.
-                ArsenicSplash.this.finish();
-            }
             super.onPostExecute(aVoid);
         }
     }

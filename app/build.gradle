@@ -31,6 +31,6 @@ dependencies {
     compile 'com.androidadvance:topsnackbar:1.1.1'
     compile 'com.jakewharton:butterknife:8.5.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
     compile 'com.aurelhubert:ahbottomnavigation:2.0.6'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
 }
