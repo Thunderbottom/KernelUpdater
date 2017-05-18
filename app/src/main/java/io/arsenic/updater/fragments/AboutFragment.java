@@ -32,7 +32,7 @@ public class AboutFragment extends Fragment {
                              Bundle savedInstanceState) {
         Element versionElement = new Element();
         versionElement
-                .setTitle("v" + BuildConfig.VERSION_NAME)
+                .setTitle("v" + BuildConfig.VERSION_CODE)
                 .setGravity(Gravity.CENTER);
         versionElement.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,9 +59,9 @@ public class AboutFragment extends Fragment {
                 .isRTL(false)
                 .setImage(R.mipmap.ic_launcher)
                 .addGroup(getString(R.string.connect_with_us))
-                .addEmail(getString(R.string.nimit_email))
-                .addWebsite(getString(R.string.nimit_website))
-                .addTwitter(getString(R.string.nimit_twitter))
+                .addEmail(getString(R.string.email))
+                .addWebsite(getString(R.string.website))
+                .addTwitter(getString(R.string.twitter))
                 .addGitHub(getString(R.string.updater_github))
                 .addItem(versionElement)
                 .create();

@@ -29,9 +29,9 @@
     <string name="title_about">About</string>
     <string name="easter_egg">Woosh!</string>
     <string name="connect_with_us">Connect with us</string>
-    <string name="nimit_email" translatable="false">nimitmehta95@gmail.com</string>
-    <string name="nimit_website" translatable="false">http://checkyourscreen.me</string>
-    <string name="nimit_twitter" translatable="false">Th3_0bserver</string>
+    <string name="email" translatable="false">nimitmehta95@gmail.com</string>
+    <string name="website" translatable="false">http://checkyourscreen.me</string>
+    <string name="twitter" translatable="false">Th3_0bserver</string>
     <string name="updater_github" translatable="false">thunderbottom/ArsenicUpdater</string>
 
     <!-- Storage -->
@@ -41,6 +41,10 @@
     <string name="update_location" translatable="false">/.arsenicupdater/</string>
     <string name="download_location" translatable="false">/.arsenicupdater/downloads/</string>
     <string name="create_failed">Failed to create directory</string>
+    <string name="permission_request">Permission Required</string>
+    <string name="storage_permission">To download the kernel, allow application to access your storage.</string>
+    <string name="continue_settings">Continue</string>
+    <string name="not_now">Not Now</string>
 
     <!-- Downloads -->
     <string name="downloading_update">Downloading Update</string>
@@ -60,5 +64,6 @@
     <string name="flash_kernel">Kernel Downloaded</string>
     <string name="flash_confirm">Do you want to flash the downloaded kernel?</string>
     <string name="root_permissions_denied">Root permissions denied!</string>
+    <string name="ok">I\'m Stupid</string>
 
 </resources>

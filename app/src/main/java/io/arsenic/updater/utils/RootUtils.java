@@ -48,10 +48,10 @@ public class RootUtils {
         return su;
     }
 
-    /*
+    /**
      * Based on AndreiLux's SU code in Synapse
      * https://github.com/AndreiLux/Synapse/blob/master/src/main/java/com/af/synapse/utils/Utils.java#L238
-     */
+     **/
     public static class SU {
 
         private Process mProcess;

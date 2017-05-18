@@ -18,7 +18,7 @@ public class ArsenicUtils {
      * Reads a line from the specified file.
      * @param filename the file to read from
      * @return the first line, if any.
-     * @throws IOException if the file couldn't be read
+     * @throws IOException if the file couldn't be read.
      */
     private static String readLine(String filename) throws IOException {
         try (BufferedReader reader = new BufferedReader(new FileReader(filename), 256)) {
@@ -27,8 +27,7 @@ public class ArsenicUtils {
     }
 
     /**
-     * Reads FILENAME_PROC_VERSION, formats it using @link formatKernelVersion and returns
-     * @return String with the final kernel version
+     * Reads FILENAME_PROC_VERSION, formats it using @link formatKernelVersion.
      * */
     public static void getFormattedKernelVersion() {
         try {

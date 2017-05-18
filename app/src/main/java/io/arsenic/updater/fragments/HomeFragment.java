@@ -10,6 +10,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.PowerManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -193,10 +194,11 @@ public class HomeFragment extends Fragment {
     public void downloadUpdate(){
         String URL = ArsenicUpdater.getDownloadURL();
         filename = URLUtil.guessFileName(URL, null, MimeTypeMap.getFileExtensionFromUrl(URL));
-        File alreadyExist = new File(getExternalStorageDirectory() + getString(R.string.update_location),
+        final File alreadyExist = new File(getExternalStorageDirectory() + getString(R.string.update_location),
                 filename);
-        if (ArsenicUpdater.getStoragePermission(getContext())){
+        if (ArsenicUpdater.getStoragePermission(getContext(), getActivity())){
             if(!alreadyExist.exists()) {
+                // Set downloading notification
                 notificationManager = (NotificationManager) getActivity()
                         .getSystemService(Context.NOTIFICATION_SERVICE);
                 notification = new NotificationCompat.Builder(getActivity());
@@ -204,29 +206,28 @@ public class HomeFragment extends Fragment {
                         .setContentText(getString(R.string.downloading_update))
                         .setSmallIcon(R.drawable.app_icon)
                         .setColor(ContextCompat.getColor(getContext(), R.color.blue_500));
+                // Initialize download progress dialog
                 mProgressDialog = new ProgressDialog(getActivity());
                 mProgressDialog.setMessage(getString(R.string.downloading_update));
                 mProgressDialog.setIndeterminate(true);
                 mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                mProgressDialog.setCancelable(true);
-                downloadTask = new DownloadTask(getActivity());
-                downloadTask.execute(URL);
-                mProgressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                mProgressDialog.setCancelable(false);
+                mProgressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
                     @Override
-                    public void onCancel(DialogInterface dialog) {
+                    public void onClick(DialogInterface dialog, int which) {
                         downloadTask.cancel(true);
-                        notification.setContentText(getString(R.string.download_canceled));
-                        notification.setProgress(0, 0, false);
-                        notificationManager.notify(1, notification.build());
+                        if(alreadyExist.exists())
+                            alreadyExist.delete();
+                        mProgressDialog.dismiss();
                     }
                 });
+                // Start downloading in the background
+                downloadTask = new DownloadTask(getActivity());
+                downloadTask.execute(URL);
             }
             else {
-                ArsenicUpdater.flashFile(getContext(), filename);
+                ArsenicUpdater.flashFile(getContext(), alreadyExist.toString());
             }
-        }
-        else {
-            Toast.makeText(getContext(), getString(R.string.download_failed), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -235,45 +236,53 @@ public class HomeFragment extends Fragment {
      *  Taken from http://stackoverflow.com/a/4239019
      *  @return Network Connectivity information
      **/
+    // Checks for active internet connection.
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         boolean networkAvailable = activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
-        if (!networkAvailable){
-            return false;
-        } else {
-            return checkConnection();
-        }
+        return networkAvailable && checkConnection();
     }
 
+    // Check whether the internet connection actually works.
     private boolean checkConnection() {
         boolean isConnected = false;
         try {
-            Process process = Runtime.getRuntime().exec("ping -c 1 www.google.com");
+            Process process = Runtime.getRuntime()
+                    .exec("ping -c 1 www.google.com");
             int returnVal = process.waitFor();
             isConnected = (returnVal == 0);
-        } catch (Exception e) {
-            // Suppress error
-        }
+        } catch (Exception ignored) {}
         return isConnected;
     }
 
+
+    /**
+     *  Checks whether the download directory exists.
+     *  Tries to create the directory if it does not exist.
+     **/
     public void checkDir(){
-        File folder = new File(getExternalStorageDirectory() + getString(R.string.update_location));
+        File folder = new File(Environment.getExternalStorageDirectory() + getString(R.string.update_location));
         boolean success = true;
         if (!folder.exists()) {
             success = folder.mkdir();
         }
         if (!success) {
             downloadTask.cancel(true);
+            mProgressDialog.dismiss();
             Toast.makeText(getContext(), getString(R.string.create_failed), Toast.LENGTH_SHORT).show();
             notification.setContentText(getString(R.string.download_failed));
             notification.setProgress(0, 0, false);
+            notification.setSmallIcon(R.drawable.ic_cancel);
             notificationManager.notify(1, notification.build());
         }
     }
 
+    /**
+     *  Downloads the file from the specified URL.
+     *  Downloads to /sdcard/.arsenicupdater/ directory.
+     **/
     private class DownloadTask extends AsyncTask<String, Integer, String> {
 
         private Context context;
@@ -363,16 +372,26 @@ public class HomeFragment extends Fragment {
         }
 
         @Override
+        protected void onCancelled(){
+            notification.setContentText(getString(R.string.download_canceled));
+            notification.setSmallIcon(R.drawable.ic_cancel);
+            notification.setProgress(0, 0, false);
+            notificationManager.notify(1, notification.build());
+        }
+
+        @Override
         protected void onPostExecute(String result) {
             mWakeLock.release();
             mProgressDialog.dismiss();
             if (result != null) {
                 Toast.makeText(context, "Download error: " + result, Toast.LENGTH_LONG).show();
                 notification.setContentText(getString(R.string.download_failed));
+                notification.setSmallIcon(R.drawable.ic_cancel);
             }
             else {
                 Toast.makeText(context, getString(R.string.download_complete), Toast.LENGTH_SHORT).show();
                 notification.setContentText(getString(R.string.download_complete));
+                notification.setSmallIcon(R.drawable.ic_check);
                 ArsenicUpdater.flashFile(getContext(), filename);
             }
             notification.setProgress(0, 0, false);

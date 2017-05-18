@@ -25,6 +25,7 @@ public class ArsenicSplash extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         SharedPreferences sp = getSharedPreferences("theme", Activity.MODE_PRIVATE);
         int app_theme;
+        // Set theme and Day/Night mode (AboutFragment)
         if(sp.getInt("theme_id", 0) == 0) {
             app_theme = R.style.SplashTheme;
             AppCompatDelegate.setDefaultNightMode(
@@ -57,7 +58,10 @@ public class ArsenicSplash extends Activity {
         }
     }
 
-
+    /**
+     *  Gets JSON from the specified URL.
+     *  Stores JSON in ArsenicUpdater.setJSON()
+     **/
     private class UpdateTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... params) {
@@ -77,6 +81,11 @@ public class ArsenicSplash extends Activity {
                 else if (ArsenicUpdater.getKernelVersion().contains("aosp") ||
                         currentKernelVersion.equals("34032")) {
                     JSONObject OS = json.getJSONObject("AOSP");
+                    remoteKernelVersion = OS.getString("version");
+                    ArsenicUpdater.setDownloadURL(OS.getString("link"));
+                }
+                else if (Integer.parseInt(currentKernelVersion) < 34032){
+                    JSONObject OS = json.getJSONObject("OOS");
                     remoteKernelVersion = OS.getString("version");
                     ArsenicUpdater.setDownloadURL(OS.getString("link"));
                 }

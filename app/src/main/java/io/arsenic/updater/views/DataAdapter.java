@@ -16,13 +16,15 @@ import io.arsenic.updater.fragments.DownloadFragment;
 import io.arsenic.updater.utils.ArsenicUpdater;
 
 public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
-    private ArrayList<String> arsenic_version;
+    private final DownloadFragment fragment;
+    private ArrayList arsenic_version;
     private ArrayList downloadList;
     private Button downloadButton;
     private View view;
 
-    public DataAdapter(ArrayList<String> countries) {
-        this.arsenic_version = countries;
+    public DataAdapter(ArrayList version, DownloadFragment fragment) {
+        this.fragment = fragment;
+        this.arsenic_version = version;
     }
 
     @Override
@@ -33,14 +35,13 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(final DataAdapter.ViewHolder viewHolder, int i) {
-        viewHolder.arsenic_text.setText(arsenic_version.get(i));
+        viewHolder.arsenic_text.setText((String) arsenic_version.get(i));
         downloadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (ArsenicUpdater.getStoragePermission(view.getContext())) {
+                if (ArsenicUpdater.getStoragePermission(view.getContext(), fragment.getActivity())) {
                     downloadList = ArsenicUpdater.getDownloadList();
-                    DownloadFragment df = new DownloadFragment();
-                    df.downloadFile((String) downloadList.get(viewHolder.getAdapterPosition()));
+                    fragment.downloadFile((String) downloadList.get(viewHolder.getAdapterPosition()));
                 }
                 else
                     Toast.makeText(view.getContext(),

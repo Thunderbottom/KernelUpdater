@@ -37,6 +37,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.Unbinder;
 import io.arsenic.updater.R;
 import io.arsenic.updater.utils.ArsenicUpdater;
 import io.arsenic.updater.views.DataAdapter;
@@ -47,13 +51,15 @@ import static android.os.Environment.getExternalStorageDirectory;
 public class DownloadFragment extends Fragment{
 
     View downloadView;
-    Button searchButton;
     private Spinner downloadSpinner;
     DownloadTask downloadTask;
     ProgressDialog mProgressDialog;
     NotificationManager notificationManager;
     NotificationCompat.Builder notification;
     String filename;
+    Unbinder unbinder;
+
+    @BindView(R.id.searchButton) Button searchButton;
 
     public DownloadFragment() {
         // Required empty public constructor
@@ -63,38 +69,54 @@ public class DownloadFragment extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         downloadView = inflater.inflate(R.layout.fragment_download, container, false);
+        unbinder = ButterKnife.bind(this, downloadView);
         downloadSpinner = (Spinner) downloadView.findViewById(R.id.spinner);
         try {
             getVersions();
         } catch (JSONException ignored) {
             Toast.makeText(getContext(), getString(R.string.kernel_version_fail), Toast.LENGTH_SHORT).show();
         }
-        searchButton = (Button) downloadView.findViewById(R.id.searchButton);
-        searchButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    initViews(downloadSpinner.getSelectedItemPosition());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
         return downloadView;
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
+
+    @OnClick(R.id.searchButton)
+    public void searchButton(){
+        if (ArsenicUpdater.getStoragePermission(getContext(), getActivity())) {
+            try {
+                initViews(downloadSpinner.getSelectedItemPosition());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * Initialize RecyclerView for download cards.
+     * @throws JSONException for problems with JSON
+     **/
     private void initViews(int position) throws JSONException {
         RecyclerView recyclerView = (RecyclerView) downloadView.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
+        RecyclerView.LayoutManager layoutManager =
+                new LinearLayoutManager(getActivity().getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
-        ArrayList<String> arsenic_list = ArsenicUpdater.getKernelVersionList(position);
-        RecyclerView.Adapter<DataAdapter.ViewHolder > adapter = new DataAdapter(arsenic_list);
+        ArrayList arsenic_list = ArsenicUpdater.getKernelVersionList(position);
+        RecyclerView.Adapter<DataAdapter.ViewHolder > adapter = new DataAdapter(arsenic_list, DownloadFragment.this);
         recyclerView.setAdapter(adapter);
     }
 
+
+    /**
+     * Get all available kernel version from remote JSON.
+     * @throws JSONException for problems with JSON
+     **/
     public void getVersions() throws JSONException {
         JSONArray versions = ArsenicUpdater.getJSON().getJSONArray("versions");
         List<String> version_list = new ArrayList<>();
@@ -109,52 +131,65 @@ public class DownloadFragment extends Fragment{
 
     public void downloadFile(String URL){
         filename = URLUtil.guessFileName(URL, null, MimeTypeMap.getFileExtensionFromUrl(URL));
-        File alreadyExist = new File(getExternalStorageDirectory() + getString(R.string.download_location),
-                filename);
+        final File alreadyExist = new File(getExternalStorageDirectory()
+                + getResources().getString(R.string.download_location), filename);
         if(!alreadyExist.exists()) {
+            // Set downloading notification
             notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
             notification = new NotificationCompat.Builder(getActivity());
             notification.setContentTitle(getString(R.string.kernelDownloader))
                     .setContentText(getString(R.string.downloading_update))
                     .setSmallIcon(R.drawable.app_icon)
                     .setColor(ContextCompat.getColor(getContext(), R.color.blue_500));
+            // Initialize download progress dialog
             mProgressDialog = new ProgressDialog(getActivity());
             mProgressDialog.setMessage(getString(R.string.downloading_update));
             mProgressDialog.setIndeterminate(true);
             mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
             mProgressDialog.setCancelable(true);
-            downloadTask = new DownloadTask(getActivity());
-            downloadTask.execute(URL);
-            mProgressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            mProgressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
                 @Override
-                public void onCancel(DialogInterface dialog) {
+                public void onClick(DialogInterface dialog, int which) {
                     downloadTask.cancel(true);
-                    notification.setContentText(getString(R.string.download_canceled));
-                    notification.setProgress(0, 0, false);
-                    notificationManager.notify(1, notification.build());
+                    if(alreadyExist.exists())
+                        alreadyExist.delete();
+                    mProgressDialog.dismiss();
                 }
             });
+            // Start downloading in the background
+            downloadTask = new DownloadTask(getActivity());
+            downloadTask.execute(URL);
         }
         else {
-            ArsenicUpdater.flashFile(getContext(), filename);
+            ArsenicUpdater.flashFile(getContext(), alreadyExist.toString());
         }
     }
 
+    /**
+     *  Checks whether the download directory exists.
+     *  Tries to create the directory if it does not exist.
+     **/
     public void checkDir(){
-        File folder = new File(getExternalStorageDirectory() + getString(R.string.update_location));
+        File folder = new File(getExternalStorageDirectory() + getString(R.string.download_location));
         boolean success = true;
         if (!folder.exists()) {
-            success = folder.mkdir();
+            success = folder.mkdirs();
         }
         if (!success) {
             downloadTask.cancel(true);
+            mProgressDialog.dismiss();
             Toast.makeText(getContext(), getString(R.string.create_failed), Toast.LENGTH_SHORT).show();
             notification.setContentText(getString(R.string.download_failed));
+            notification.setSmallIcon(R.drawable.ic_cancel);
             notification.setProgress(0, 0, false);
             notificationManager.notify(1, notification.build());
         }
     }
 
+    /**
+     *  Downloads the file from the specified URL.
+     *  Downloads to /sdcard/.arsenicupdater/downloads/ directory.
+     **/
     private class DownloadTask extends AsyncTask<String, Integer, String> {
 
         private Context context;
@@ -244,16 +279,26 @@ public class DownloadFragment extends Fragment{
         }
 
         @Override
+        protected void onCancelled(){
+            notification.setContentText(getString(R.string.download_canceled));
+            notification.setSmallIcon(R.drawable.ic_cancel);
+            notification.setProgress(0, 0, false);
+            notificationManager.notify(1, notification.build());
+        }
+
+        @Override
         protected void onPostExecute(String result) {
             mWakeLock.release();
             mProgressDialog.dismiss();
             if (result != null) {
                 Toast.makeText(context, "Download error: " + result, Toast.LENGTH_LONG).show();
                 notification.setContentText(getString(R.string.download_failed));
+                notification.setSmallIcon(R.drawable.ic_cancel);
             }
             else {
                 Toast.makeText(context, getString(R.string.download_complete), Toast.LENGTH_SHORT).show();
                 notification.setContentText(getString(R.string.download_complete));
+                notification.setSmallIcon(R.drawable.ic_check);
                 ArsenicUpdater.flashFile(getContext(), filename);
             }
             notification.setProgress(0, 0, false);
