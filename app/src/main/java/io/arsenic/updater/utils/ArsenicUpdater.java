@@ -135,7 +135,7 @@ public class ArsenicUpdater {
     }
 
     public static boolean getStoragePermission(Context context){
-        if (ActivityCompat.checkSelfPermission((Activity)context,android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        if (ActivityCompat.checkSelfPermission(context,android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 == PackageManager.PERMISSION_GRANTED) {
             Log.v(TAG,"Permission is granted");
             return true;
@@ -148,8 +148,8 @@ public class ArsenicUpdater {
 
     public static void flashFile(Context context, final String filename) {
         new AlertDialog.Builder(context)
-                .setTitle(context.getString(R.string.flashKernel))
-                .setMessage(context.getString(R.string.flashConfirm))
+                .setTitle(context.getString(R.string.flash_kernel))
+                .setMessage(context.getString(R.string.flash_confirm))
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         String command = "install " + filename;

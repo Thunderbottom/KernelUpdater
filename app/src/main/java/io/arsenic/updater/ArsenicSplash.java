@@ -74,7 +74,8 @@ public class ArsenicSplash extends Activity {
                     remoteKernelVersion = OS.getString("version");
                     ArsenicUpdater.setDownloadURL(OS.getString("link"));
                 }
-                else if (ArsenicUpdater.getKernelVersion().contains("aosp") || currentKernelVersion.equals("34032")) {
+                else if (ArsenicUpdater.getKernelVersion().contains("aosp") ||
+                        currentKernelVersion.equals("34032")) {
                     JSONObject OS = json.getJSONObject("AOSP");
                     remoteKernelVersion = OS.getString("version");
                     ArsenicUpdater.setDownloadURL(OS.getString("link"));

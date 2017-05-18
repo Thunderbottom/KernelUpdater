@@ -58,11 +58,11 @@ public class AboutFragment extends Fragment {
                 .setDescription(getString(R.string.about_desc))
                 .isRTL(false)
                 .setImage(R.mipmap.ic_launcher)
-                .addGroup("Connect with us")
-                .addEmail("nimitmehta95@gmail.com")
-                .addWebsite("http://checkyourscreen.me")
-                .addTwitter("Th3_0bserver")
-                .addGitHub("thunderbottom/ArsenicUpdater")
+                .addGroup(getString(R.string.connect_with_us))
+                .addEmail(getString(R.string.nimit_email))
+                .addWebsite(getString(R.string.nimit_website))
+                .addTwitter(getString(R.string.nimit_twitter))
+                .addGitHub(getString(R.string.updater_github))
                 .addItem(versionElement)
                 .create();
     }

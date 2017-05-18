@@ -68,7 +68,6 @@ public class HomeFragment extends Fragment {
 
     @BindColor(R.color.red_500) int colorBad;
     @BindColor(R.color.green_500) int colorOK;
-    @BindColor(R.color.yellow_500) int colorWarn;
     @BindColor(R.color.grey_500) int colorNeutral;
     @BindColor(R.color.blue_500) int colorInfo;
     @BindColor(android.R.color.transparent) int trans;
@@ -90,23 +89,23 @@ public class HomeFragment extends Fragment {
                     case 0:
                         updateColor = colorOK;
                         updateImage = R.drawable.ic_check;
-                        updateText = R.string.latestVersion;
+                        updateText = R.string.latest_version;
                         break;
                     case 1:
                         updateColor = colorInfo;
                         updateImage = R.drawable.ic_update;
-                        updateText = R.string.newerVersion;
+                        updateText = R.string.newer_version;
                         updateCardView.setVisibility(View.VISIBLE);
                         break;
                     case -2:
                         updateColor = colorNeutral;
                         updateImage = R.drawable.ic_help;
-                        updateText  = R.string.failedUpdate;
+                        updateText  = R.string.failed_update_check;
                         break;
                     default:
                         updateColor = colorBad;
                         updateImage = R.drawable.ic_cancel;
-                        updateText  = R.string.unknownVersion;
+                        updateText  = R.string.unknown_version;
                         break;
                 }
             }
@@ -114,14 +113,14 @@ public class HomeFragment extends Fragment {
                 // Installed kernel is not Arsenic
                 updateColor = colorBad;
                 updateImage = R.drawable.ic_cancel;
-                updateText = R.string.unknownKernel;
+                updateText = R.string.unknown_kernel;
             }
         }
         else{
             // No Internet Connection
             updateColor = colorNeutral;
             updateImage = R.drawable.ic_help;
-            updateText = R.string.cannotCheckUpdate;
+            updateText = R.string.cannot_check_for_update;
         }
         updateContainer.setBackgroundColor(updateColor);
         updateIcon.setImageResource(updateImage);
@@ -156,7 +155,7 @@ public class HomeFragment extends Fragment {
     public void rebootRecovery(){
         new AlertDialog.Builder(getContext())
                 .setTitle(getString(R.string.reboot_recovery_text))
-                .setMessage(getString(R.string.rebootConfirm))
+                .setMessage(getString(R.string.reboot_confirm))
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         su = RootUtils.getSU();
@@ -175,7 +174,7 @@ public class HomeFragment extends Fragment {
     public void rebootBootloader(){
         new AlertDialog.Builder(getContext())
                 .setTitle(getString(R.string.reboot_bootloader_text))
-                .setMessage(getString(R.string.rebootConfirm))
+                .setMessage(getString(R.string.reboot_confirm))
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         su = RootUtils.getSU();
@@ -194,17 +193,19 @@ public class HomeFragment extends Fragment {
     public void downloadUpdate(){
         String URL = ArsenicUpdater.getDownloadURL();
         filename = URLUtil.guessFileName(URL, null, MimeTypeMap.getFileExtensionFromUrl(URL));
-        File alreadyExist = new File(getExternalStorageDirectory() + getString(R.string.updateLocation), filename);
+        File alreadyExist = new File(getExternalStorageDirectory() + getString(R.string.update_location),
+                filename);
         if (ArsenicUpdater.getStoragePermission(getContext())){
             if(!alreadyExist.exists()) {
-                notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+                notificationManager = (NotificationManager) getActivity()
+                        .getSystemService(Context.NOTIFICATION_SERVICE);
                 notification = new NotificationCompat.Builder(getActivity());
                 notification.setContentTitle(getString(R.string.kernelDownloader))
-                        .setContentText(getString(R.string.downloadingUpdate))
+                        .setContentText(getString(R.string.downloading_update))
                         .setSmallIcon(R.drawable.app_icon)
                         .setColor(ContextCompat.getColor(getContext(), R.color.blue_500));
                 mProgressDialog = new ProgressDialog(getActivity());
-                mProgressDialog.setMessage(getString(R.string.downloadingUpdate));
+                mProgressDialog.setMessage(getString(R.string.downloading_update));
                 mProgressDialog.setIndeterminate(true);
                 mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
                 mProgressDialog.setCancelable(true);
@@ -214,7 +215,7 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void onCancel(DialogInterface dialog) {
                         downloadTask.cancel(true);
-                        notification.setContentText(getString(R.string.downloadCanceled));
+                        notification.setContentText(getString(R.string.download_canceled));
                         notification.setProgress(0, 0, false);
                         notificationManager.notify(1, notification.build());
                     }
@@ -225,32 +226,49 @@ public class HomeFragment extends Fragment {
             }
         }
         else {
-            Toast.makeText(getContext(), getString(R.string.downloadFailed), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.download_failed), Toast.LENGTH_SHORT).show();
         }
     }
 
     /**
      *  Checks whether there is an active internet connection
-     *  @url http://stackoverflow.com/a/4239019
+     *  Taken from http://stackoverflow.com/a/4239019
      *  @return Network Connectivity information
      **/
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
+        boolean networkAvailable = activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
+        if (!networkAvailable){
+            return false;
+        } else {
+            return checkConnection();
+        }
+    }
+
+    private boolean checkConnection() {
+        boolean isConnected = false;
+        try {
+            Process process = Runtime.getRuntime().exec("ping -c 1 www.google.com");
+            int returnVal = process.waitFor();
+            isConnected = (returnVal == 0);
+        } catch (Exception e) {
+            // Suppress error
+        }
+        return isConnected;
     }
 
     public void checkDir(){
-        File folder = new File(getExternalStorageDirectory() + getString(R.string.updateLocation));
+        File folder = new File(getExternalStorageDirectory() + getString(R.string.update_location));
         boolean success = true;
         if (!folder.exists()) {
             success = folder.mkdir();
         }
         if (!success) {
             downloadTask.cancel(true);
-            Toast.makeText(getContext(), getString(R.string.createFailed), Toast.LENGTH_SHORT).show();
-            notification.setContentText(getString(R.string.downloadFailed));
+            Toast.makeText(getContext(), getString(R.string.create_failed), Toast.LENGTH_SHORT).show();
+            notification.setContentText(getString(R.string.download_failed));
             notification.setProgress(0, 0, false);
             notificationManager.notify(1, notification.build());
         }
@@ -286,7 +304,9 @@ public class HomeFragment extends Fragment {
                 // download the file
                 checkDir();
                 input = connection.getInputStream();
-                filename = getExternalStorageDirectory() + getString(R.string.updateLocation) + URLUtil.guessFileName(url.toString(), null, MimeTypeMap.getFileExtensionFromUrl(url.toString()));
+                filename = getExternalStorageDirectory() + getString(R.string.update_location) +
+                        URLUtil.guessFileName(url.toString(), null,
+                                MimeTypeMap.getFileExtensionFromUrl(url.toString()));
                 output = new FileOutputStream(filename);
                 byte data[] = new byte[4096];
                 long total = 0;
@@ -348,11 +368,11 @@ public class HomeFragment extends Fragment {
             mProgressDialog.dismiss();
             if (result != null) {
                 Toast.makeText(context, "Download error: " + result, Toast.LENGTH_LONG).show();
-                notification.setContentText(getString(R.string.downloadFailed));
+                notification.setContentText(getString(R.string.download_failed));
             }
             else {
-                Toast.makeText(context, getString(R.string.downloadComplete), Toast.LENGTH_SHORT).show();
-                notification.setContentText(getString(R.string.downloadComplete));
+                Toast.makeText(context, getString(R.string.download_complete), Toast.LENGTH_SHORT).show();
+                notification.setContentText(getString(R.string.download_complete));
                 ArsenicUpdater.flashFile(getContext(), filename);
             }
             notification.setProgress(0, 0, false);
