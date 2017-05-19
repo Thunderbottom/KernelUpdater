@@ -73,14 +73,6 @@
                                 android:layout_gravity="center"
                                 android:contentDescription="@string/update_check_text" />
 
-                            <ProgressBar
-                                android:id="@+id/update_check_progress"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:indeterminateTint="@color/grey_700"
-                                android:visibility="gone"/>
-
                         </FrameLayout>
 
                         <TextView

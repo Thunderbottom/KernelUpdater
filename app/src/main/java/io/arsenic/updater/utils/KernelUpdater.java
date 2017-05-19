@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
@@ -67,7 +69,7 @@ public class KernelUpdater {
      *  Gets Current Kernel Version from KernelUtils.
      *  @param kernelVersion JSON String Object.
      **/
-     static void setKernelVersion(String kernelVersion) {
+    static void setKernelVersion(String kernelVersion) {
         KernelUpdater.kernelVersion = kernelVersion;
     }
 
@@ -205,4 +207,31 @@ public class KernelUpdater {
                 })
                 .show();
     }
+
+    /**
+     *  Checks whether there is an active internet connection
+     *  Taken from http://stackoverflow.com/a/4239019
+     *  @return Network Connectivity information
+     **/
+    // Checks for active internet connection.
+    public static boolean isNetworkAvailable(Activity activity) {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        boolean networkAvailable = activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
+        return networkAvailable && checkConnection();
+    }
+
+    // Check whether the internet connection actually works.
+    private static boolean checkConnection() {
+        boolean isConnected = false;
+        try {
+            Process process = Runtime.getRuntime()
+                    .exec("ping -c 1 www.google.com");
+            int returnVal = process.waitFor();
+            isConnected = (returnVal == 0);
+        } catch (Exception ignored) {}
+        return isConnected;
+    }
+
 }

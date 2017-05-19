@@ -56,6 +56,9 @@
     <string name="download_complete">Download Complete.</string>
     <string name="download_canceled">Download Canceled.</string>
     <string name="kernel_version_fail">Failed to get kernel versions</string>
+    <string name="never_show">Never Show Again</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="no_internet">No Internet connection detected.</string>
 
     <!-- Recovery -->
     <string name="reboot_recovery_text">Reboot Recovery</string>
@@ -71,8 +74,6 @@
     <string name="ok">I\'m Stupid</string>
     <string name="lineage_help">The LineageOS version of the Kernel is only specific for LineageOS Gestures.
         Any other custom ROM based on LineageOS is compatible with the AOSP kernel.</string>
-    <string name="never_show">Never Show Again</string>
-    <string name="dismiss">Dismiss</string>
 
 
     <!-- Libraries -->
