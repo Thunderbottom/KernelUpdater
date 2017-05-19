@@ -1,6 +1,7 @@
 package io.arsenic.updater.fragments;
 
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.NotificationManager;
@@ -11,6 +12,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.PowerManager;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.CardView;
@@ -62,6 +64,8 @@ public class DownloadFragment extends Fragment{
     NotificationCompat.Builder notification;
     String filename;
     Unbinder unbinder;
+
+    int TIMEOUT = 1000;
 
     @BindView(R.id.searchButton) Button searchButton;
     @BindView(R.id.dismiss) TextView dismiss;
@@ -155,39 +159,43 @@ public class DownloadFragment extends Fragment{
     }
 
     public void downloadFile(String URL){
-        filename = URLUtil.guessFileName(URL, null, MimeTypeMap.getFileExtensionFromUrl(URL));
-        final File alreadyExist = new File(getExternalStorageDirectory()
-                + getResources().getString(R.string.download_location), filename);
-        if(!alreadyExist.exists()) {
-            // Set downloading notification
-            notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
-            notification = new NotificationCompat.Builder(getActivity());
-            notification.setContentTitle(getString(R.string.kernelDownloader))
-                    .setContentText(getString(R.string.downloading_update))
-                    .setSmallIcon(R.drawable.app_icon)
-                    .setColor(ContextCompat.getColor(getContext(), R.color.blue_500));
-            // Initialize download progress dialog
-            mProgressDialog = new ProgressDialog(getActivity());
-            mProgressDialog.setMessage(getString(R.string.downloading_update));
-            mProgressDialog.setIndeterminate(true);
-            mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-            mProgressDialog.setCancelable(true);
-            mProgressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    downloadTask.cancel(true);
-                    if(alreadyExist.exists())
-                        alreadyExist.delete();
-                    mProgressDialog.dismiss();
-                }
-            });
-            // Start downloading in the background
-            downloadTask = new DownloadTask(getActivity());
-            downloadTask.execute(URL);
+        if (KernelUpdater.isNetworkAvailable(getActivity())) {
+            filename = URLUtil.guessFileName(URL, null, MimeTypeMap.getFileExtensionFromUrl(URL));
+            final File alreadyExist = new File(getExternalStorageDirectory()
+                    + getResources().getString(R.string.download_location), filename);
+            if (!alreadyExist.exists()) {
+                // Set downloading notification
+                notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+                notification = new NotificationCompat.Builder(getActivity());
+                notification.setContentTitle(getString(R.string.kernelDownloader))
+                        .setContentText(getString(R.string.downloading_update))
+                        .setSmallIcon(R.drawable.app_icon)
+                        .setColor(ContextCompat.getColor(getContext(), R.color.blue_500));
+                // Initialize download progress dialog
+                mProgressDialog = new ProgressDialog(getActivity());
+                mProgressDialog.setMessage(getString(R.string.downloading_update));
+                mProgressDialog.setIndeterminate(true);
+                mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                mProgressDialog.setCancelable(true);
+                mProgressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        downloadTask.cancel(true);
+                        if (alreadyExist.exists())
+                            alreadyExist.delete();
+                        mProgressDialog.dismiss();
+                    }
+                });
+                // Start downloading in the background
+                downloadTask = new DownloadTask(getActivity());
+                downloadTask.execute(URL);
+            } else {
+                KernelUpdater.flashFile(getContext(), alreadyExist.toString());
+            }
         }
-        else {
-            KernelUpdater.flashFile(getContext(), alreadyExist.toString());
-        }
+        else
+            Snackbar.make(downloadView, getString(R.string.no_internet), Snackbar.LENGTH_SHORT)
+                    .show();
     }
 
     /**
@@ -215,6 +223,7 @@ public class DownloadFragment extends Fragment{
      *  Downloads the file from the specified URL.
      *  Downloads to /sdcard/.arsenicupdater/downloads/ directory.
      **/
+    @SuppressLint("StaticFieldLeak")
     private class DownloadTask extends AsyncTask<String, Integer, String> {
 
         private Context context;
@@ -288,7 +297,7 @@ public class DownloadFragment extends Fragment{
             PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
             mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
                     getClass().getName());
-            mWakeLock.acquire();
+            mWakeLock.acquire(TIMEOUT);
             mProgressDialog.show();
         }
 

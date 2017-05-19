@@ -30,7 +30,7 @@
             android:label="@string/app_name" />
         <activity
             android:name=".DeniedRootActivity"
-            android:theme="@style/RootDeniedTheme"/>
+            android:theme="@style/RootDeniedTheme" />
     </application>
 
 </manifest>

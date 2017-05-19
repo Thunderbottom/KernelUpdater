@@ -9,10 +9,19 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
 
-import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
-import com.aurelhubert.ahbottomnavigation.AHBottomNavigationAdapter;
+import com.mikepenz.community_material_typeface_library.CommunityMaterial;
 import com.mikepenz.iconics.context.IconicsContextWrapper;
+import com.mikepenz.materialdrawer.AccountHeader;
+import com.mikepenz.materialdrawer.AccountHeaderBuilder;
+import com.mikepenz.materialdrawer.Drawer;
+import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.mikepenz.materialdrawer.model.DividerDrawerItem;
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.Nameable;
 
 import io.arsenic.updater.fragments.AboutFragment;
 import io.arsenic.updater.fragments.DownloadFragment;
@@ -23,7 +32,10 @@ public class MainActivity extends AppCompatActivity {
     int app_theme;
     int bg_color;
     int accent_color;
-    AHBottomNavigation navigation;
+    Fragment fragment = null;
+
+    private AccountHeader headerResult = null;
+    private Drawer result = null;
 
 
     @Override
@@ -31,47 +43,77 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sp = getSharedPreferences("theme", Activity.MODE_PRIVATE);
         if(sp.getInt("theme_id", 0) == 0) {
             app_theme = R.style.AppTheme;
-            bg_color = ContextCompat.getColor(this, R.color.colorPrimary);
+            bg_color = R.color.colorPrimary;
             accent_color = ContextCompat.getColor(this, R.color.dark_colorPrimary);
         }
         else {
             app_theme = R.style.DarkAppTheme;
-            bg_color = ContextCompat.getColor(this, R.color.dark_colorPrimary);
+            bg_color = R.color.dark_colorPrimary;
             accent_color = ContextCompat.getColor(this, R.color.colorPrimary);
         }
+
         setTheme(app_theme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        pushFragment(new HomeFragment());
-        navigation = (AHBottomNavigation) findViewById(R.id.bottom_navigation);
-        navigation.setDefaultBackgroundColor(bg_color);
-        navigation.setAccentColor(accent_color);
-        navigation.setTitleState(AHBottomNavigation.TitleState.SHOW_WHEN_ACTIVE);
-        AHBottomNavigationAdapter navigationAdapter = new AHBottomNavigationAdapter(this, R.menu.navigation);
-        navigation.setBehaviorTranslationEnabled(true);
-        navigationAdapter.setupWithBottomNavigation(navigation);
-        navigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
-            @Override
-            public boolean onTabSelected(int position, boolean wasSelected) {
-                selectFragment(position);
-                return true;
-            }
 
-        });
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        assert getSupportActionBar() != null;
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        buildHeader(savedInstanceState);
+        result = new DrawerBuilder()
+                .withActivity(this)
+                .withToolbar(toolbar)
+                .withAccountHeader(headerResult)
+                .addDrawerItems(
+                        new PrimaryDrawerItem().withName(R.string.title_home).withIcon(CommunityMaterial.Icon.cmd_home),
+                        new PrimaryDrawerItem().withName(R.string.title_download).withIcon(CommunityMaterial.Icon.cmd_download),
+                        new PrimaryDrawerItem().withName(R.string.title_about).withIcon(CommunityMaterial.Icon.cmd_information),
+                        new DividerDrawerItem(),
+                        new PrimaryDrawerItem().withName(R.string.settings).withIcon(CommunityMaterial.Icon.cmd_account_settings)
+                )
+                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                    @Override
+                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                        if (drawerItem instanceof Nameable) {
+                            switch (position) {
+                                case 1:
+                                    fragment = new HomeFragment();
+                                    break;
+                                case 2:
+                                    fragment = new DownloadFragment();
+                                    break;
+                                case 3:
+                                    fragment = new AboutFragment();
+                                    break;
+                            }
+                            pushFragment(fragment);
+                        }
+
+                        return false;
+                    }
+                }).build();
+        pushFragment(new HomeFragment());
     }
 
-    protected void selectFragment(int item) {
-        switch (item) {
-            case 0:
-                pushFragment(new HomeFragment());
-                break;
-            case 1:
-                pushFragment(new DownloadFragment());
-                break;
-            case 2:
-                pushFragment(new AboutFragment());
-                break;
+
+
+    @Override
+    public void onBackPressed() {
+        if (result != null && result.isDrawerOpen()) {
+            result.closeDrawer();
+        } else {
+            super.onBackPressed();
         }
+    }
+
+    private void buildHeader(Bundle savedInstanceState) {
+            headerResult = new AccountHeaderBuilder()
+                    .withActivity(this)
+                    .withHeaderBackground(bg_color)
+                    .withCompactStyle(false)
+                    .withSavedInstance(savedInstanceState)
+                    .build();
     }
 
     protected void pushFragment(Fragment fragment) {

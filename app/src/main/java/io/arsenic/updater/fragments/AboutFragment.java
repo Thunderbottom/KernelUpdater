@@ -69,7 +69,7 @@ public class AboutFragment extends Fragment {
         unbinder = ButterKnife.bind(this, aboutView);
         RecyclerView libraryRV = (RecyclerView) aboutView.findViewById(R.id.libraryRecyclerView);
         libraryRV.setHasFixedSize(true);
-        initViews();
+        //initViews();
         appVersion = (TextView) aboutView.findViewById(R.id.appVersion);
         appVersion.setText(String.valueOf(BuildConfig.VERSION_NAME));
         builder = new CustomTabsIntent.Builder();

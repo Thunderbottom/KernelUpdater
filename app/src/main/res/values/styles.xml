@@ -1,22 +1,35 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light">
+    <style name="AppTheme" parent="MaterialDrawerTheme.Light.ActionBar">
         <item name="theme_name">light</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowLightStatusBar" tools:targetApi="23">true</item>
         <item name="android:titleTextAppearance" tools:targetApi="23">@android:color/black</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="material_drawer_primary_icon">@color/grey_500</item>
+        <item name="material_drawer_primary_text">@color/grey_700</item>
+        <item name="material_drawer_selected">@color/primary_dark</item>
+        <item name="material_drawer_selected_text">@color/colorAccent</item>
     </style>
 
-    <style name="DarkAppTheme" parent="Theme.AppCompat">
+    <style name="DarkAppTheme" parent="MaterialDrawerTheme.ActionBar">
         <item name="theme_name">dark</item>
         <item name="colorPrimary">@color/dark_colorPrimary</item>
         <item name="colorPrimaryDark">@android:color/black</item>
         <item name="colorAccent">@color/colorPrimaryDark</item>
         <item name="android:windowLightStatusBar" tools:targetApi="23">false</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="material_drawer_selected">@color/primary_dark</item>
+        <item name="material_drawer_selected_text">@color/colorAccent</item>
     </style>
+
+    <style name="SettingActivityTheme" parent="AppTheme"/>
+    <style name="SettingActivityThemeDark" parent="DarkAppTheme"/>
 
     <style name="NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -39,10 +52,5 @@
 
     <style name="RootDeniedTheme" parent="SplashTheme"/>
     <style name="RootDeniedDarkTheme" parent="SplashThemeDark"/>
-
-    <style name="about_image">
-        <item name="android:layout_width">150dp</item>
-        <item name="android:layout_height">150dp</item>
-    </style>
 
 </resources>

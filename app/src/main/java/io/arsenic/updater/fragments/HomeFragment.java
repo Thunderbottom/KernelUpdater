@@ -6,12 +6,11 @@ import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.PowerManager;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.NotificationCompat;
@@ -23,7 +22,6 @@ import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.webkit.URLUtil;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,23 +47,25 @@ import static android.os.Environment.getExternalStorageDirectory;
 
 public class HomeFragment extends Fragment {
 
-    TextView kernelVersion;
-    String kVersion;
     RootUtils.SU su;
     DownloadTask downloadTask;
     ProgressDialog mProgressDialog;
     NotificationManager notificationManager;
     NotificationCompat.Builder notification;
+    View homeView;
+
+    int TIMEOUT =  1500;
 
     String filename;
 
     private Unbinder unbinder;
 
     @BindView(R.id.update_container) View updateContainer;
-    @BindView(R.id.update_check_progress) ProgressBar updateProgressBar;
     @BindView(R.id.update_status) TextView updateStatus;
     @BindView (R.id.update_icon) ImageView updateIcon;
     @BindView(R.id.downloadUpdate_card_view) CardView updateCardView;
+
+    @BindView(R.id.kvTextView) TextView kvTextView;
 
     @BindColor(R.color.red_500) int colorBad;
     @BindColor(R.color.green_500) int colorOK;
@@ -78,56 +78,45 @@ public class HomeFragment extends Fragment {
 
     public void checkForUpdates() {
         int updateImage, updateColor, updateText;
-        updateProgressBar.setVisibility(View.VISIBLE);
         updateContainer.setBackgroundColor(trans);
-        if(isNetworkAvailable()) {
-            // Internet Connection Available
-            if(KernelUpdater.getKernelVersion()
-                    .toLowerCase()
-                    .contains(getString(R.string.arsenic).toLowerCase())) {
-                // Installed Kernel is Arsenic
-                switch (KernelUpdater.getUpdateValue()) {
-                    case 0:
-                        updateColor = colorOK;
-                        updateImage = R.drawable.ic_check;
-                        updateText = R.string.latest_version;
-                        break;
-                    case 1:
-                        updateColor = colorInfo;
-                        updateImage = R.drawable.ic_update;
-                        updateText = R.string.newer_version;
-                        updateCardView.setVisibility(View.VISIBLE);
-                        break;
-                    case -2:
-                        updateColor = colorNeutral;
-                        updateImage = R.drawable.ic_help;
-                        updateText  = R.string.failed_update_check;
-                        break;
-                    default:
-                        updateColor = colorBad;
-                        updateImage = R.drawable.ic_cancel;
-                        updateText  = R.string.unknown_version;
-                        break;
-                }
-            }
-            else {
-                // Installed kernel is not Arsenic
-                updateColor = colorBad;
-                updateImage = R.drawable.ic_cancel;
-                updateText = R.string.unknown_kernel;
+        if(KernelUpdater.getKernelVersion()
+                .toLowerCase()
+                .contains(getString(R.string.arsenic).toLowerCase())) {
+            // Installed Kernel is Arsenic
+            switch (KernelUpdater.getUpdateValue()) {
+                case 0:
+                    updateColor = colorOK;
+                    updateImage = R.drawable.ic_check;
+                    updateText = R.string.latest_version;
+                    break;
+                case 1:
+                    updateColor = colorInfo;
+                    updateImage = R.drawable.ic_update;
+                    updateText = R.string.newer_version;
+                    updateCardView.setVisibility(View.VISIBLE);
+                    break;
+                case -2:
+                    updateColor = colorNeutral;
+                    updateImage = R.drawable.ic_help;
+                    updateText  = R.string.failed_update_check;
+                    break;
+                default:
+                    updateColor = colorBad;
+                    updateImage = R.drawable.ic_cancel;
+                    updateText  = R.string.unknown_version;
+                    break;
             }
         }
-        else{
-            // No Internet Connection
-            updateColor = colorNeutral;
-            updateImage = R.drawable.ic_help;
-            updateText = R.string.cannot_check_for_update;
+        else {
+            // Installed kernel is not Arsenic
+            updateColor = colorBad;
+            updateImage = R.drawable.ic_cancel;
+            updateText = R.string.unknown_kernel;
         }
         updateContainer.setBackgroundColor(updateColor);
         updateIcon.setImageResource(updateImage);
         updateStatus.setText(updateText);
         updateStatus.setTextColor(updateColor);
-        updateProgressBar.setVisibility(View.INVISIBLE);
     }
 
     public HomeFragment() {
@@ -137,11 +126,9 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View homeView = inflater.inflate(R.layout.fragment_home, container, false);
+        homeView = inflater.inflate(R.layout.fragment_home, container, false);
         unbinder = ButterKnife.bind(this, homeView);
-        kernelVersion = (TextView) homeView.findViewById(R.id.kvTextView);
-        kVersion = KernelUpdater.getKernelValue();
-        kernelVersion.setText(kVersion);
+        kvTextView.setText(KernelUpdater.getKernelValue());
         checkForUpdates();
         return homeView;
     }
@@ -192,70 +179,49 @@ public class HomeFragment extends Fragment {
 
     @OnClick(R.id.downloadUpdate_card_view)
     public void downloadUpdate(){
-        String URL = KernelUpdater.getDownloadURL();
-        filename = URLUtil.guessFileName(URL, null, MimeTypeMap.getFileExtensionFromUrl(URL));
-        final File alreadyExist = new File(getExternalStorageDirectory() + getString(R.string.update_location),
-                filename);
-        if (KernelUpdater.getStoragePermission(getContext(), getActivity())){
-            if(!alreadyExist.exists()) {
-                // Set downloading notification
-                notificationManager = (NotificationManager) getActivity()
-                        .getSystemService(Context.NOTIFICATION_SERVICE);
-                notification = new NotificationCompat.Builder(getActivity());
-                notification.setContentTitle(getString(R.string.kernelDownloader))
-                        .setContentText(getString(R.string.downloading_update))
-                        .setSmallIcon(R.drawable.app_icon)
-                        .setColor(ContextCompat.getColor(getContext(), R.color.blue_500));
-                // Initialize download progress dialog
-                mProgressDialog = new ProgressDialog(getActivity());
-                mProgressDialog.setMessage(getString(R.string.downloading_update));
-                mProgressDialog.setIndeterminate(true);
-                mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                mProgressDialog.setCancelable(false);
-                mProgressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        downloadTask.cancel(true);
-                        if(alreadyExist.exists())
-                            alreadyExist.delete();
-                        mProgressDialog.dismiss();
-                    }
-                });
-                // Start downloading in the background
-                downloadTask = new DownloadTask(getActivity());
-                downloadTask.execute(URL);
-            }
-            else {
-                KernelUpdater.flashFile(getContext(), alreadyExist.toString());
+        if (KernelUpdater.isNetworkAvailable(getActivity())) {
+            String URL = KernelUpdater.getDownloadURL();
+            filename = URLUtil.guessFileName(URL, null, MimeTypeMap.getFileExtensionFromUrl(URL));
+            final File alreadyExist = new File(getExternalStorageDirectory() + getString(R.string.update_location),
+                    filename);
+            if (KernelUpdater.getStoragePermission(getContext(), getActivity())) {
+                if (!alreadyExist.exists()) {
+                    // Set downloading notification
+                    notificationManager = (NotificationManager) getActivity()
+                            .getSystemService(Context.NOTIFICATION_SERVICE);
+                    notification = new NotificationCompat.Builder(getActivity());
+                    notification.setContentTitle(getString(R.string.kernelDownloader))
+                            .setContentText(getString(R.string.downloading_update))
+                            .setSmallIcon(R.drawable.app_icon)
+                            .setColor(ContextCompat.getColor(getContext(), R.color.blue_500));
+                    // Initialize download progress dialog
+                    mProgressDialog = new ProgressDialog(getActivity());
+                    mProgressDialog.setMessage(getString(R.string.downloading_update));
+                    mProgressDialog.setIndeterminate(true);
+                    mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                    mProgressDialog.setCancelable(false);
+                    mProgressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            downloadTask.cancel(true);
+                            if (alreadyExist.exists())
+                                alreadyExist.delete();
+                            mProgressDialog.dismiss();
+                        }
+                    });
+                    // Start downloading in the background
+                    downloadTask = new DownloadTask(getActivity());
+                    downloadTask.execute(URL);
+                } else {
+                    KernelUpdater.flashFile(getContext(), alreadyExist.toString());
+                }
             }
         }
+        else
+            Snackbar.make(homeView, getString(R.string.no_internet), Snackbar.LENGTH_SHORT)
+                    .show();
     }
 
-    /**
-     *  Checks whether there is an active internet connection
-     *  Taken from http://stackoverflow.com/a/4239019
-     *  @return Network Connectivity information
-     **/
-    // Checks for active internet connection.
-    private boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        boolean networkAvailable = activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
-        return networkAvailable && checkConnection();
-    }
-
-    // Check whether the internet connection actually works.
-    private boolean checkConnection() {
-        boolean isConnected = false;
-        try {
-            Process process = Runtime.getRuntime()
-                    .exec("ping -c 1 www.google.com");
-            int returnVal = process.waitFor();
-            isConnected = (returnVal == 0);
-        } catch (Exception ignored) {}
-        return isConnected;
-    }
 
 
     /**
@@ -356,7 +322,7 @@ public class HomeFragment extends Fragment {
             PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
             mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
                     getClass().getName());
-            mWakeLock.acquire();
+            mWakeLock.acquire(TIMEOUT);
             mProgressDialog.show();
         }
 
