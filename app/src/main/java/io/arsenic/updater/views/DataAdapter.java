@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 import io.arsenic.updater.R;
 import io.arsenic.updater.fragments.DownloadFragment;
-import io.arsenic.updater.utils.ArsenicUpdater;
+import io.arsenic.updater.utils.KernelUpdater;
 
 public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
     private final DownloadFragment fragment;
@@ -39,8 +39,8 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
         downloadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (ArsenicUpdater.getStoragePermission(view.getContext(), fragment.getActivity())) {
-                    downloadList = ArsenicUpdater.getDownloadList();
+                if (KernelUpdater.getStoragePermission(view.getContext(), fragment.getActivity())) {
+                    downloadList = KernelUpdater.getDownloadList();
                     fragment.downloadFile((String) downloadList.get(viewHolder.getAdapterPosition()));
                 }
                 else

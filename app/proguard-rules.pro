@@ -23,3 +23,12 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+-keep public class AboutFragment
+-keep public class DownloadFragment
+-keep public class HomeFragment
+-keep public class ArsenicUpdater
+-keep public class ArsenicUtils
+-keep public class JSONService
+-keep public class RootUtils
+-keep public class DataAdapter
+-keep public class LibraryAdapter

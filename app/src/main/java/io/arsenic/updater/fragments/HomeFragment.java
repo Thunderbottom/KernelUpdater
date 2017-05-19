@@ -41,7 +41,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import io.arsenic.updater.R;
-import io.arsenic.updater.utils.ArsenicUpdater;
+import io.arsenic.updater.utils.KernelUpdater;
 import io.arsenic.updater.utils.RootUtils;
 
 import static android.content.ContentValues.TAG;
@@ -82,11 +82,11 @@ public class HomeFragment extends Fragment {
         updateContainer.setBackgroundColor(trans);
         if(isNetworkAvailable()) {
             // Internet Connection Available
-            if(ArsenicUpdater.getKernelVersion()
+            if(KernelUpdater.getKernelVersion()
                     .toLowerCase()
                     .contains(getString(R.string.arsenic).toLowerCase())) {
                 // Installed Kernel is Arsenic
-                switch (ArsenicUpdater.getUpdateValue()) {
+                switch (KernelUpdater.getUpdateValue()) {
                     case 0:
                         updateColor = colorOK;
                         updateImage = R.drawable.ic_check;
@@ -140,7 +140,7 @@ public class HomeFragment extends Fragment {
         View homeView = inflater.inflate(R.layout.fragment_home, container, false);
         unbinder = ButterKnife.bind(this, homeView);
         kernelVersion = (TextView) homeView.findViewById(R.id.kvTextView);
-        kVersion = ArsenicUpdater.getKernelValue();
+        kVersion = KernelUpdater.getKernelValue();
         kernelVersion.setText(kVersion);
         checkForUpdates();
         return homeView;
@@ -192,11 +192,11 @@ public class HomeFragment extends Fragment {
 
     @OnClick(R.id.downloadUpdate_card_view)
     public void downloadUpdate(){
-        String URL = ArsenicUpdater.getDownloadURL();
+        String URL = KernelUpdater.getDownloadURL();
         filename = URLUtil.guessFileName(URL, null, MimeTypeMap.getFileExtensionFromUrl(URL));
         final File alreadyExist = new File(getExternalStorageDirectory() + getString(R.string.update_location),
                 filename);
-        if (ArsenicUpdater.getStoragePermission(getContext(), getActivity())){
+        if (KernelUpdater.getStoragePermission(getContext(), getActivity())){
             if(!alreadyExist.exists()) {
                 // Set downloading notification
                 notificationManager = (NotificationManager) getActivity()
@@ -226,7 +226,7 @@ public class HomeFragment extends Fragment {
                 downloadTask.execute(URL);
             }
             else {
-                ArsenicUpdater.flashFile(getContext(), alreadyExist.toString());
+                KernelUpdater.flashFile(getContext(), alreadyExist.toString());
             }
         }
     }
@@ -392,7 +392,7 @@ public class HomeFragment extends Fragment {
                 Toast.makeText(context, getString(R.string.download_complete), Toast.LENGTH_SHORT).show();
                 notification.setContentText(getString(R.string.download_complete));
                 notification.setSmallIcon(R.drawable.ic_check);
-                ArsenicUpdater.flashFile(getContext(), filename);
+                KernelUpdater.flashFile(getContext(), filename);
             }
             notification.setProgress(0, 0, false);
             notificationManager.notify(1, notification.build());

@@ -2,8 +2,8 @@
 <resources>
 
     <!-- Light Theme Colors-->
-    <color name="colorPrimary">#f5f5f5</color>
-    <color name="colorPrimaryDark">#e0e0e0</color>
+    <color name="colorPrimary">#F5F5F5</color>
+    <color name="colorPrimaryDark">#E0E0E0</color>
     <color name="colorAccent">#212121</color>
 
     <!-- Dark Theme Colors -->
@@ -12,10 +12,15 @@
     <!-- Update Checker Colors -->
     <color name="blue_500">#2196F3</color>
     <color name="green_500">#4CAF50</color>
+    <color name="grey_300">#E0E0E0</color>
     <color name="grey_500">#9E9E9E</color>
     <color name="grey_600">#757575</color>
     <color name="grey_700">#616161</color>
     <color name="red_500">#F44336</color>
     <color name="yellow_500">#FFC107</color>
+
+    <!-- Custom Tab Colors -->
+    <color name="github">#333</color>
+    <color name="twitter">#0084b4</color>
 
 </resources>

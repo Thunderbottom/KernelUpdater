@@ -9,9 +9,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
-public class ArsenicUtils {
+public class KernelUtils {
 
-    private static String LOG_TAG = "ArsenicUtils";
+    private static String LOG_TAG = "KernelUtils";
 
 
     /**
@@ -62,14 +62,14 @@ public class ArsenicUtils {
         Matcher m = Pattern.compile(PROC_VERSION_REGEX).matcher(rawKernelVersion);
         if (!m.matches()) {
             Log.e(LOG_TAG, "Regex did not match on /proc/version: " + rawKernelVersion);
-            ArsenicUpdater.setKernelValue("Unavailable");
+            KernelUpdater.setKernelValue("Unavailable");
         } else if (m.groupCount() < 4) {
             Log.e(LOG_TAG, "Regex match on /proc/version only returned " + m.groupCount()
                     + " groups");
-            ArsenicUpdater.setKernelValue("Unavailable");
+            KernelUpdater.setKernelValue("Unavailable");
         }
-        ArsenicUpdater.setKernelVersion(m.group(1));
-        ArsenicUpdater.setKernelValue(m.group(1) + "\n"     // LinuxKernelVersion-KernelName
+        KernelUpdater.setKernelVersion(m.group(1));
+        KernelUpdater.setKernelValue(m.group(1) + "\n"     // LinuxKernelVersion-KernelName
                 + m.group(2) + " "                          // x@y.com #1
                 + m.group(3) + "\n"                         // Day Month Date HH:MM:SS Timezone Year
                 + m.group(4));

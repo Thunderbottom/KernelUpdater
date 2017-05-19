@@ -20,19 +20,23 @@
     <string name="search">Search</string>
     <string name="update_check_text">Tap to check for updates</string>
     <string name="download_update_text">Download</string>
+    <string name="download_hint">Hint</string>
 
     <!-- About -->
-    <string name="about_desc">
-        Arsenic Kernel, made by Nimit Mehta.
-        \nThis is a supporting application which allows users to update to the latest version of Arsenic.
-    </string>
+    <string name="about_desc">Updating kernels to the latest version couldn\'t have been any easier</string>
+    <string name="contact_us">{cmd-email} CONTACT US</string>
+    <string name="fork_us">{cmd-github-face} FORK US ON GITHUB</string>
+    <string name="follow_us">{cmd-twitter} FOLLOW US ON TWITTER</string>
+    <string name="check_us_out">{cmd-link} CHECK OUR WEBSITE</string>
+
+    <string name="licenses">Open Source Libraries Used</string>
     <string name="title_about">About</string>
     <string name="easter_egg">Woosh!</string>
     <string name="connect_with_us">Connect with us</string>
     <string name="email" translatable="false">nimitmehta95@gmail.com</string>
-    <string name="website" translatable="false">http://checkyourscreen.me</string>
+    <string name="website" translatable="false">http://arsenic-kernel.download</string>
     <string name="twitter" translatable="false">Th3_0bserver</string>
-    <string name="updater_github" translatable="false">thunderbottom/ArsenicUpdater</string>
+    <string name="github" translatable="false">thunderbottom/ArsenicUpdater</string>
 
     <!-- Storage -->
     <string name="update_url" translatable="false">
@@ -65,5 +69,32 @@
     <string name="flash_confirm">Do you want to flash the downloaded kernel?</string>
     <string name="root_permissions_denied">Root permissions denied!</string>
     <string name="ok">I\'m Stupid</string>
+    <string name="lineage_help">The LineageOS version of the Kernel is only specific for LineageOS Gestures.
+        Any other custom ROM based on LineageOS is compatible with the AOSP kernel.</string>
+    <string name="never_show">Never Show Again</string>
+    <string name="dismiss">Dismiss</string>
+
+
+    <!-- Libraries -->
+    <string-array name="library_name">
+        <item>AHBottomNavigation</item>
+        <item>AndroidIconics</item>
+        <item>ButterKnife</item>
+    </string-array>
+    <string-array name="library_version">
+        <item>2.0.6</item>
+        <item>2.8.4</item>
+        <item>8.5.1</item>
+    </string-array>
+    <string-array name="library_description">
+        <item>aurelhubert</item>
+        <item>mikepenz</item>
+        <item>jakewharton</item>
+    </string-array>
+    <string-array name="library_urls">
+        <item>https://github.com/aurelhubert/ahbottomnavigation</item>
+        <item>https://github.com/mikepenz/Android-Iconics</item>
+        <item>https://github.com/JakeWharton/butterknife</item>
+    </string-array>
 
 </resources>

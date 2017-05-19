@@ -23,7 +23,7 @@ import io.arsenic.updater.R;
 import static android.content.ContentValues.TAG;
 
 
-public class ArsenicUpdater {
+public class KernelUpdater {
 
     private static ArrayList downloadList;
     private static String kernelVersion;
@@ -42,7 +42,7 @@ public class ArsenicUpdater {
      *  @param downloadList JSON String Object.
      **/
     private static void setDownloadList(ArrayList downloadList) {
-        ArsenicUpdater.downloadList = downloadList;
+        KernelUpdater.downloadList = downloadList;
     }
 
     public static ArrayList getDownloadList() {
@@ -51,11 +51,11 @@ public class ArsenicUpdater {
 
 
     /**
-     *  Gets Current Kernel Version from ArsenicUtils.
+     *  Gets Current Kernel Version from KernelUtils.
      *  @param kernelVersion JSON String Object.
      **/
     static void setKernelValue(String kernelVersion) {
-        ArsenicUpdater.kernelValue = kernelVersion;
+        KernelUpdater.kernelValue = kernelVersion;
     }
 
     public static String getKernelValue() {
@@ -64,11 +64,11 @@ public class ArsenicUpdater {
 
 
     /**
-     *  Gets Current Kernel Version from ArsenicUtils.
+     *  Gets Current Kernel Version from KernelUtils.
      *  @param kernelVersion JSON String Object.
      **/
      static void setKernelVersion(String kernelVersion) {
-        ArsenicUpdater.kernelVersion = kernelVersion;
+        KernelUpdater.kernelVersion = kernelVersion;
     }
 
     public static String getKernelVersion() {
@@ -77,7 +77,7 @@ public class ArsenicUpdater {
 
 
     /**
-     *  Gets JSON Object from ArsenicUtils.
+     *  Gets JSON Object from KernelUtils.
      *  @return JSON JSON Object.
      **/
     public static JSONObject getJSON() {
@@ -85,12 +85,12 @@ public class ArsenicUpdater {
     }
 
     public static void setJSON(JSONObject JSON) {
-        ArsenicUpdater.JSON = JSON;
+        KernelUpdater.JSON = JSON;
     }
 
 
     /**
-     *  Gets Update code from ArsenicUtils.
+     *  Gets Update code from KernelUtils.
      *  @param updateValue JSON String Object.
      **/
 
@@ -101,7 +101,7 @@ public class ArsenicUpdater {
        -2 - Cannot check for updates
      */
     public static void setUpdateValue(int updateValue) {
-        ArsenicUpdater.updateValue = updateValue;
+        KernelUpdater.updateValue = updateValue;
     }
 
     public static int getUpdateValue() {
@@ -110,11 +110,11 @@ public class ArsenicUpdater {
 
 
     /**
-     *  Gets DownloadURL from ArsenicSplash.
+     *  Gets DownloadURL from KernelSplash.
      *  @param downloadURL String URL.
      **/
     public static void setDownloadURL(String downloadURL) {
-        ArsenicUpdater.downloadURL = downloadURL;
+        KernelUpdater.downloadURL = downloadURL;
     }
 
     public static String getDownloadURL() {
@@ -127,7 +127,7 @@ public class ArsenicUpdater {
      *  @return kernel_list List of kernels, depending on the OS type.
      **/
     public static ArrayList getKernelVersionList(int position) throws JSONException {
-        JSONArray versions = ArsenicUpdater.getJSON().getJSONArray("versions");
+        JSONArray versions = KernelUpdater.getJSON().getJSONArray("versions");
         ArrayList<String> kernel_list = new ArrayList<>();
         ArrayList<String> download_list = new ArrayList<>();
         JSONObject kernel_versions = versions.getJSONObject(position);
@@ -137,7 +137,7 @@ public class ArsenicUpdater {
             kernel_list.add(OSList.get("OS").toString());
             download_list.add(OSList.get("URL").toString());
         }
-        ArsenicUpdater.setDownloadList(download_list);
+        KernelUpdater.setDownloadList(download_list);
         return kernel_list;
     }
 
@@ -153,13 +153,15 @@ public class ArsenicUpdater {
             return true;
         } else {
             Log.v(TAG,"Permission is revoked");
-            if(ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            if(ActivityCompat.shouldShowRequestPermissionRationale(activity,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 new AlertDialog.Builder(context)
                         .setTitle(context.getString(R.string.permission_request))
                         .setMessage(context.getString(R.string.storage_permission))
                         .setPositiveButton(context.getString(R.string.continue_settings), new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                Intent i = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                Intent i = new Intent
+                                        (android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
                                 i.addCategory(Intent.CATEGORY_DEFAULT);
                                 i.setData(Uri.parse("package:" + context.getPackageName()));
                                 context.startActivity(i);

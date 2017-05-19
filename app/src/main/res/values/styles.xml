@@ -40,4 +40,9 @@
     <style name="RootDeniedTheme" parent="SplashTheme"/>
     <style name="RootDeniedDarkTheme" parent="SplashThemeDark"/>
 
+    <style name="about_image">
+        <item name="android:layout_width">150dp</item>
+        <item name="android:layout_height">150dp</item>
+    </style>
+
 </resources>

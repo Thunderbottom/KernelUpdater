@@ -1,5 +1,203 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="io.arsenic.updater.fragments.AboutFragment"/>
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:context="io.arsenic.updater.fragments.HomeFragment">
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/about_card_view"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="8dp">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    app:srcCompat="@drawable/app_icon" />
+
+                <TextView
+                    android:id="@+id/appNameTextView"
+                    android:padding="4dp"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:text="@string/app_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textAllCaps="true"/>
+
+                <TextView
+                    android:id="@+id/appVersion"
+                    android:padding="4dp"
+                    android:textSize="16sp"
+                    android:textStyle="italic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textAllCaps="true"/>
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <TextView
+            android:id="@+id/ConnectWithUsTextView"
+            android:padding="12dp"
+            android:text="@string/connect_with_us"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            android:layout_gravity="center_horizontal"/>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/contact_card_view"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="8dp">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/contact_us_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="4dp"
+                    android:gravity="center"
+                    android:padding="8dp"
+                    android:textSize="16sp"
+                    android:text="@string/contact_us"/>
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/github_card_view"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="8dp">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/fork_us_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="4dp"
+                    android:gravity="center"
+                    android:padding="8dp"
+                    android:textSize="16sp"
+                    android:text="@string/fork_us"/>
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+        <android.support.v7.widget.CardView
+            android:id="@+id/twitter_card_view"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="8dp">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/follow_us_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="4dp"
+                    android:gravity="center"
+                    android:padding="8dp"
+                    android:textSize="16sp"
+                    android:text="@string/follow_us"/>
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+        <android.support.v7.widget.CardView
+            android:id="@+id/website_card_view"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="8dp">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/website_link_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="4dp"
+                    android:gravity="center"
+                    android:padding="8dp"
+                    android:textSize="16sp"
+                    android:text="@string/check_us_out"/>
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <TextView
+            android:id="@+id/LicensesTextView"
+            android:padding="12dp"
+            android:text="@string/licenses"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="true"
+            android:textStyle="bold"
+            android:layout_gravity="center_horizontal"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/libraryRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+
+    </LinearLayout>
+
+</ScrollView>

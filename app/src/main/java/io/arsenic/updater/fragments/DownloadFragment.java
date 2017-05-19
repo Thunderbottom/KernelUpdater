@@ -1,16 +1,19 @@
 package io.arsenic.updater.fragments;
 
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.NotificationCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -21,6 +24,7 @@ import android.webkit.URLUtil;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -42,7 +46,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import io.arsenic.updater.R;
-import io.arsenic.updater.utils.ArsenicUpdater;
+import io.arsenic.updater.utils.KernelUpdater;
 import io.arsenic.updater.views.DataAdapter;
 
 import static android.os.Environment.getExternalStorageDirectory;
@@ -60,6 +64,9 @@ public class DownloadFragment extends Fragment{
     Unbinder unbinder;
 
     @BindView(R.id.searchButton) Button searchButton;
+    @BindView(R.id.dismiss) TextView dismiss;
+    @BindView(R.id.never_show) TextView never_show;
+    @BindView(R.id.help_card_view) CardView helpCard;
 
     public DownloadFragment() {
         // Required empty public constructor
@@ -71,6 +78,10 @@ public class DownloadFragment extends Fragment{
                              Bundle savedInstanceState) {
         downloadView = inflater.inflate(R.layout.fragment_download, container, false);
         unbinder = ButterKnife.bind(this, downloadView);
+        SharedPreferences sp = getContext().getSharedPreferences("view", Activity.MODE_PRIVATE);
+        if (sp.getInt("helpCardVisible", 1) == 0) {
+            dismiss();
+        }
         downloadSpinner = (Spinner) downloadView.findViewById(R.id.spinner);
         try {
             getVersions();
@@ -88,13 +99,27 @@ public class DownloadFragment extends Fragment{
 
     @OnClick(R.id.searchButton)
     public void searchButton(){
-        if (ArsenicUpdater.getStoragePermission(getContext(), getActivity())) {
+        if (KernelUpdater.getStoragePermission(getContext(), getActivity())) {
             try {
                 initViews(downloadSpinner.getSelectedItemPosition());
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    @OnClick(R.id.dismiss)
+    public void dismiss() {
+        helpCard.setVisibility(View.GONE);
+    }
+
+    @OnClick(R.id.never_show)
+    public void neverShow() {
+        SharedPreferences settings = getActivity().getSharedPreferences("view", 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putInt("helpCardVisible", 0)
+                .apply();
+        dismiss();
     }
 
     /**
@@ -107,7 +132,7 @@ public class DownloadFragment extends Fragment{
         RecyclerView.LayoutManager layoutManager =
                 new LinearLayoutManager(getActivity().getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
-        ArrayList arsenic_list = ArsenicUpdater.getKernelVersionList(position);
+        ArrayList arsenic_list = KernelUpdater.getKernelVersionList(position);
         RecyclerView.Adapter<DataAdapter.ViewHolder > adapter = new DataAdapter(arsenic_list, DownloadFragment.this);
         recyclerView.setAdapter(adapter);
     }
@@ -118,7 +143,7 @@ public class DownloadFragment extends Fragment{
      * @throws JSONException for problems with JSON
      **/
     public void getVersions() throws JSONException {
-        JSONArray versions = ArsenicUpdater.getJSON().getJSONArray("versions");
+        JSONArray versions = KernelUpdater.getJSON().getJSONArray("versions");
         List<String> version_list = new ArrayList<>();
         for(int i = 0; i < versions.length(); i ++){
             JSONObject kernel_versions = versions.getJSONObject(i);
@@ -161,7 +186,7 @@ public class DownloadFragment extends Fragment{
             downloadTask.execute(URL);
         }
         else {
-            ArsenicUpdater.flashFile(getContext(), alreadyExist.toString());
+            KernelUpdater.flashFile(getContext(), alreadyExist.toString());
         }
     }
 
@@ -299,7 +324,7 @@ public class DownloadFragment extends Fragment{
                 Toast.makeText(context, getString(R.string.download_complete), Toast.LENGTH_SHORT).show();
                 notification.setContentText(getString(R.string.download_complete));
                 notification.setSmallIcon(R.drawable.ic_check);
-                ArsenicUpdater.flashFile(getContext(), filename);
+                KernelUpdater.flashFile(getContext(), filename);
             }
             notification.setProgress(0, 0, false);
             notificationManager.notify(1, notification.build());
