@@ -169,7 +169,7 @@ public class DownloadFragment extends Fragment{
                 notification = new NotificationCompat.Builder(getActivity());
                 notification.setContentTitle(getString(R.string.kernelDownloader))
                         .setContentText(getString(R.string.downloading_update))
-                        .setSmallIcon(R.drawable.app_icon)
+                        .setSmallIcon(R.drawable.ic_notification)
                         .setColor(ContextCompat.getColor(getContext(), R.color.blue_500));
                 // Initialize download progress dialog
                 mProgressDialog = new ProgressDialog(getActivity());
@@ -182,7 +182,8 @@ public class DownloadFragment extends Fragment{
                     public void onClick(DialogInterface dialog, int which) {
                         downloadTask.cancel(true);
                         if (alreadyExist.exists())
-                            alreadyExist.delete();
+                            if (alreadyExist.delete())
+                                Toast.makeText(getActivity(), getString(R.string.download_canceled), Toast.LENGTH_SHORT).show();
                         mProgressDialog.dismiss();
                     }
                 });
@@ -212,10 +213,7 @@ public class DownloadFragment extends Fragment{
             downloadTask.cancel(true);
             mProgressDialog.dismiss();
             Toast.makeText(getContext(), getString(R.string.create_failed), Toast.LENGTH_SHORT).show();
-            notification.setContentText(getString(R.string.download_failed));
-            notification.setSmallIcon(R.drawable.ic_cancel);
-            notification.setProgress(0, 0, false);
-            notificationManager.notify(1, notification.build());
+            setNotification(getString(R.string.download_failed), R.drawable.ic_cancel);
         }
     }
 
@@ -306,18 +304,15 @@ public class DownloadFragment extends Fragment{
             // Notification
             notification.setProgress(100, progress[0], false);
             notificationManager.notify(1, notification.build());
-            super.onProgressUpdate(progress);
             mProgressDialog.setIndeterminate(false);
             mProgressDialog.setMax(100);
             mProgressDialog.setProgress(progress[0]);
+            super.onProgressUpdate(progress);
         }
 
         @Override
         protected void onCancelled(){
-            notification.setContentText(getString(R.string.download_canceled));
-            notification.setSmallIcon(R.drawable.ic_cancel);
-            notification.setProgress(0, 0, false);
-            notificationManager.notify(1, notification.build());
+            setNotification(getString(R.string.download_failed), R.drawable.ic_cancel);
         }
 
         @Override
@@ -326,17 +321,20 @@ public class DownloadFragment extends Fragment{
             mProgressDialog.dismiss();
             if (result != null) {
                 Toast.makeText(context, "Download error: " + result, Toast.LENGTH_LONG).show();
-                notification.setContentText(getString(R.string.download_failed));
-                notification.setSmallIcon(R.drawable.ic_cancel);
+                setNotification(getString(R.string.download_failed), R.drawable.ic_cancel);
             }
             else {
                 Toast.makeText(context, getString(R.string.download_complete), Toast.LENGTH_SHORT).show();
-                notification.setContentText(getString(R.string.download_complete));
-                notification.setSmallIcon(R.drawable.ic_check);
+                setNotification(getString(R.string.download_complete), R.drawable.ic_check);
                 KernelUpdater.flashFile(getContext(), filename);
             }
-            notification.setProgress(0, 0, false);
-            notificationManager.notify(1, notification.build());
         }
+    }
+
+    public void setNotification(String notification_text, int notification_icon){
+        notification.setContentText(notification_text);
+        notification.setSmallIcon(notification_icon);
+        notification.setProgress(0, 0, false);
+        notificationManager.notify(1, notification.build());
     }
 }

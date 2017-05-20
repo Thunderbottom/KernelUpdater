@@ -1,6 +1,7 @@
 package io.arsenic.updater.fragments;
 
 
+import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.app.NotificationManager;
 import android.app.ProgressDialog;
@@ -192,7 +193,7 @@ public class HomeFragment extends Fragment {
                     notification = new NotificationCompat.Builder(getActivity());
                     notification.setContentTitle(getString(R.string.kernelDownloader))
                             .setContentText(getString(R.string.downloading_update))
-                            .setSmallIcon(R.drawable.app_icon)
+                            .setSmallIcon(R.drawable.ic_notification)
                             .setColor(ContextCompat.getColor(getContext(), R.color.blue_500));
                     // Initialize download progress dialog
                     mProgressDialog = new ProgressDialog(getActivity());
@@ -205,7 +206,8 @@ public class HomeFragment extends Fragment {
                         public void onClick(DialogInterface dialog, int which) {
                             downloadTask.cancel(true);
                             if (alreadyExist.exists())
-                                alreadyExist.delete();
+                                if (alreadyExist.delete())
+                                    Toast.makeText(getActivity(), getString(R.string.download_canceled), Toast.LENGTH_SHORT).show();
                             mProgressDialog.dismiss();
                         }
                     });
@@ -238,10 +240,7 @@ public class HomeFragment extends Fragment {
             downloadTask.cancel(true);
             mProgressDialog.dismiss();
             Toast.makeText(getContext(), getString(R.string.create_failed), Toast.LENGTH_SHORT).show();
-            notification.setContentText(getString(R.string.download_failed));
-            notification.setProgress(0, 0, false);
-            notification.setSmallIcon(R.drawable.ic_cancel);
-            notificationManager.notify(1, notification.build());
+            setNotification(getString(R.string.download_canceled), R.drawable.ic_cancel);
         }
     }
 
@@ -249,6 +248,7 @@ public class HomeFragment extends Fragment {
      *  Downloads the file from the specified URL.
      *  Downloads to /sdcard/.arsenicupdater/ directory.
      **/
+    @SuppressLint("StaticFieldLeak")
     private class DownloadTask extends AsyncTask<String, Integer, String> {
 
         private Context context;
@@ -339,10 +339,7 @@ public class HomeFragment extends Fragment {
 
         @Override
         protected void onCancelled(){
-            notification.setContentText(getString(R.string.download_canceled));
-            notification.setSmallIcon(R.drawable.ic_cancel);
-            notification.setProgress(0, 0, false);
-            notificationManager.notify(1, notification.build());
+            setNotification(getString(R.string.download_canceled), R.drawable.ic_cancel);
         }
 
         @Override
@@ -351,17 +348,20 @@ public class HomeFragment extends Fragment {
             mProgressDialog.dismiss();
             if (result != null) {
                 Toast.makeText(context, "Download error: " + result, Toast.LENGTH_LONG).show();
-                notification.setContentText(getString(R.string.download_failed));
-                notification.setSmallIcon(R.drawable.ic_cancel);
+                setNotification(getString(R.string.download_canceled), R.drawable.ic_cancel);
             }
             else {
                 Toast.makeText(context, getString(R.string.download_complete), Toast.LENGTH_SHORT).show();
-                notification.setContentText(getString(R.string.download_complete));
-                notification.setSmallIcon(R.drawable.ic_check);
+                setNotification(getString(R.string.download_complete), R.drawable.ic_check);
                 KernelUpdater.flashFile(getContext(), filename);
             }
-            notification.setProgress(0, 0, false);
-            notificationManager.notify(1, notification.build());
         }
+    }
+
+    public void setNotification(String notification_text, int notification_icon){
+        notification.setContentText(notification_text);
+        notification.setSmallIcon(notification_icon);
+        notification.setProgress(0, 0, false);
+        notificationManager.notify(1, notification.build());
     }
 }

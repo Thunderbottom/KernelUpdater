@@ -29,9 +29,11 @@
 
                 <ImageView
                     android:id="@+id/imageView"
+                    android:layout_margin="8dp"
                     android:layout_width="150dp"
                     android:layout_height="150dp"
-                    app:srcCompat="@drawable/app_icon" />
+                    app:srcCompat="@drawable/ic_icon"
+                    android:contentDescription="@string/app_name" />
 
                 <TextView
                     android:id="@+id/appNameTextView"

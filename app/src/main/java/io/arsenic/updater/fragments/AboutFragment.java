@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +31,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import io.arsenic.updater.BuildConfig;
 import io.arsenic.updater.R;
+import io.arsenic.updater.utils.KernelUpdater;
 import io.arsenic.updater.views.LibraryAdapter;
 
 /**
@@ -54,6 +56,7 @@ public class AboutFragment extends Fragment {
     @BindView(R.id.about_card_view) CardView aboutCard;
     @BindView(R.id.contact_card_view) CardView contactCard;
     @BindView(R.id.github_card_view) CardView githubCard;
+    @BindView(R.id.imageView) ImageView about_image;
     @BindView(R.id.website_card_view) CardView websiteCard;
     @BindView(R.id.twitter_card_view) CardView twitterCard;
 
@@ -67,6 +70,7 @@ public class AboutFragment extends Fragment {
                              Bundle savedInstanceState) {
         aboutView = inflater.inflate(R.layout.fragment_about, container, false);
         unbinder = ButterKnife.bind(this, aboutView);
+        about_image.setImageResource(KernelUpdater.getIcon());
         RecyclerView libraryRV = (RecyclerView) aboutView.findViewById(R.id.libraryRecyclerView);
         libraryRV.setHasFixedSize(true);
         initViews();

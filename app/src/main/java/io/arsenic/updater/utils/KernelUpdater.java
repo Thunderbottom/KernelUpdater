@@ -33,11 +33,20 @@ public class KernelUpdater {
     private static JSONObject JSON;
     private static int updateValue = 0;
     private static String downloadURL;
+    private static int icon;
 
     private static final String SCRIPT_NAME = "openrecoveryscript";
 
     private static final File OPENRECOVERY_SCRIPT_FILE = new File("/cache/recovery", SCRIPT_NAME);
 
+
+    public static int getIcon() {
+        return icon;
+    }
+
+    public static void setIcon(int icon) {
+        KernelUpdater.icon = icon;
+    }
 
     /**
      *  Gets List of download for specified kernel.

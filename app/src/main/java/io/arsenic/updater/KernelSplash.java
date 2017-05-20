@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.widget.ImageView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,18 +20,27 @@ public class KernelSplash extends Activity {
 
     private static int updateValue = -2;
     static String remoteKernelVersion;
+    int app_theme, icon_theme;
+
+    ImageView splash_image;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         SharedPreferences sp = getSharedPreferences("theme", Activity.MODE_PRIVATE);
-        int app_theme;
-        if(sp.getInt("theme_id", 0) == 0)
+        if(sp.getInt("theme_id", 0) == 0) {
             app_theme = R.style.SplashTheme;
-        else
+            icon_theme = R.drawable.ic_icon;
+        }
+        else {
             app_theme = R.style.SplashThemeDark;
+            icon_theme = R.drawable.ic_icon_dark;
+        }
         setTheme(app_theme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+        splash_image = (ImageView) findViewById(R.id.splash_image);
+        splash_image.setImageResource(icon_theme);
+        KernelUpdater.setIcon(icon_theme);
         if (!RootUtils.rootAccess()) {
             Intent intent = new Intent(KernelSplash.this, DeniedRootActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);

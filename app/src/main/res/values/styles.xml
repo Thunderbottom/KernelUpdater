@@ -40,4 +40,11 @@
     <style name="RootDeniedTheme" parent="SplashTheme"/>
     <style name="RootDeniedDarkTheme" parent="SplashThemeDark"/>
 
+    <style name="lightCard" parent="CardView.Light">
+        <item name="cardBackgroundColor">@color/green_500</item>
+    </style>
+    <style name="darkCard" parent="CardView.Dark">
+        <item name="cardBackgroundColor">@color/cardview_dark_background</item>
+    </style>
+
 </resources>
