@@ -1,19 +1,12 @@
 package io.arsenic.updater.fragments;
 
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.NotificationManager;
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.PowerManager;
-import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,8 +14,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.MimeTypeMap;
-import android.webkit.URLUtil;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -33,13 +24,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,21 +35,18 @@ import io.arsenic.updater.R;
 import io.arsenic.updater.utils.KernelUpdater;
 import io.arsenic.updater.views.DataAdapter;
 
-import static android.os.Environment.getExternalStorageDirectory;
 
+public class DownloadFragment extends Fragment {
 
-public class DownloadFragment extends Fragment{
+    public static final int TIMEOUT = 1000;
 
     View downloadView;
     private Spinner downloadSpinner;
-    DownloadTask downloadTask;
     ProgressDialog mProgressDialog;
     NotificationManager notificationManager;
     NotificationCompat.Builder notification;
     String filename;
     Unbinder unbinder;
-
-    int TIMEOUT = 1000;
 
     @BindView(R.id.searchButton) Button searchButton;
     @BindView(R.id.dismiss) TextView dismiss;

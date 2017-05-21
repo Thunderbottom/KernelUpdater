@@ -1,18 +1,11 @@
 package io.arsenic.updater.fragments;
 
 
-import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.app.NotificationManager;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.PowerManager;
-import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.CardView;
@@ -20,19 +13,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.MimeTypeMap;
-import android.webkit.URLUtil;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 import butterknife.BindColor;
 import butterknife.BindView;
@@ -45,14 +27,12 @@ import io.arsenic.updater.utils.RootUtils;
 import io.arsenic.updater.utils.UpdateDownloader;
 
 import static android.content.ContentValues.TAG;
-import static android.os.Environment.getExternalStorageDirectory;
 
 public class HomeFragment extends Fragment {
 
     public static UpdateDownloader updateDownloader;
 
     RootUtils.SU su;
-    DownloadTask downloadTask;
     ProgressDialog mProgressDialog;
     NotificationManager notificationManager;
     NotificationCompat.Builder notification;

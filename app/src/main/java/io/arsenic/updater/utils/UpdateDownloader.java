@@ -3,35 +3,19 @@ package io.arsenic.updater.utils;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.Fragment;
 import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.os.PowerManager;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.NotificationCompat;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.webkit.URLUtil;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -40,16 +24,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import butterknife.Unbinder;
 import io.arsenic.updater.R;
-import io.arsenic.updater.utils.KernelUpdater;
-import io.arsenic.updater.views.DataAdapter;
+
+import static android.os.Environment.getExternalStorageDirectory;
+import static io.arsenic.updater.fragments.DownloadFragment.TIMEOUT;
 
 public class UpdateDownloader {
 
@@ -82,7 +61,7 @@ public class UpdateDownloader {
     public void downloadUpdate(String URL) {
         if (KernelUpdater.isNetworkAvailable(getActivity())) {
             final String filename = URLUtil.guessFileName(URL, null, MimeTypeMap.getFileExtensionFromUrl(URL));
-            final File alreadyExist = new File(mContext.getExternalStorageDirectory() + 
+            final File alreadyExist = new File(getExternalStorageDirectory() +
                             mContext.getString(R.string.update_location),
                         filename);
             if (KernelUpdater.getStoragePermission(getContext(), getActivity())) {
@@ -91,7 +70,7 @@ public class UpdateDownloader {
                     mNotificationManager = (NotificationManager) getActivity()
                             .getSystemService(Context.NOTIFICATION_SERVICE);
                     mNotification = new NotificationCompat.Builder(getActivity());
-                    mNotification.setContentTitle(getString(R.string.kernelDownloader))
+                    mNotification.setContentTitle(getContext().getString(R.string.kernelDownloader))
                             .setContentText(getContext().getString(R.string.downloading_update))
                             .setSmallIcon(R.drawable.ic_notification)
                             .setColor(ContextCompat.getColor(getContext(), R.color.blue_500));
@@ -122,7 +101,7 @@ public class UpdateDownloader {
                 }
             }
         } else {
-            Snackbar.make(mHomeView, getString(R.string.no_internet), Snackbar.LENGTH_SHORT)
+            Snackbar.make(mHomeView, getContext().getString(R.string.no_internet), Snackbar.LENGTH_SHORT)
                     .show();
         }
     }
@@ -136,6 +115,7 @@ public class UpdateDownloader {
 
         private Context context;
         private PowerManager.WakeLock mWakeLock;
+        private String filename;
 
         DownloadTask(Context context) {
             this.context = context;
@@ -162,7 +142,7 @@ public class UpdateDownloader {
                 // download the file
                 checkDir();
                 input = connection.getInputStream();
-                filename = getExternalStorageDirectory() + getString(R.string.download_location) +
+                filename = getExternalStorageDirectory() + getContext().getString(R.string.download_location) +
                         URLUtil.guessFileName(url.toString(), null,
                                 MimeTypeMap.getFileExtensionFromUrl(url.toString()));
                 output = new FileOutputStream(filename);
@@ -200,9 +180,8 @@ public class UpdateDownloader {
         protected void onPreExecute() {
             super.onPreExecute();
             // Notification
-            Notification notification = mNotification;
-            notification.setProgress(100, 0, false);
-            notificationManager.notify(1, notification.build());
+            mNotification.setProgress(100, 0, false);
+            mNotificationManager.notify(1, mNotification.build());
             PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
             mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
                     getClass().getName());
@@ -213,9 +192,8 @@ public class UpdateDownloader {
         @Override
         protected void onProgressUpdate(Integer... progress) {
             // Notification
-            Notification notification = mNotification;
-            notification.setProgress(100, progress[0], false);
-            notificationManager.notify(1, notification.build());
+            mNotification.setProgress(100, progress[0], false);
+            mNotificationManager.notify(1, mNotification.build());
             mProgressDialog.setIndeterminate(false);
             mProgressDialog.setMax(100);
             mProgressDialog.setProgress(progress[0]);
@@ -224,7 +202,7 @@ public class UpdateDownloader {
 
         @Override
         protected void onCancelled(){
-            setNotification(getString(R.string.download_failed), R.drawable.ic_cancel);
+            setNotification(getContext().getString(R.string.download_failed), R.drawable.ic_cancel);
         }
 
         @Override
@@ -233,10 +211,10 @@ public class UpdateDownloader {
             mProgressDialog.dismiss();
             if (result != null) {
                 Toast.makeText(mContext, "Download error: " + result, Toast.LENGTH_LONG).show();
-                setNotification(getContext()getString(R.string.download_failed), R.drawable.ic_cancel);
+                setNotification(getContext().getString(R.string.download_failed), R.drawable.ic_cancel);
             }
             else {
-                Toast.makeText(mContext, getString(R.string.download_complete), Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, getContext().getString(R.string.download_complete), Toast.LENGTH_SHORT).show();
                 setNotification(getContext().getString(R.string.download_complete), R.drawable.ic_check);
                 KernelUpdater.flashFile(getContext(), filename);
             }
@@ -244,11 +222,11 @@ public class UpdateDownloader {
     }
 
     public void setNotification(String notification_text, int notification_icon) {
-        Notification notification = mNotification;
+        NotificationCompat.Builder notification = mNotification;
         notification.setContentText(notification_text);
         notification.setSmallIcon(notification_icon);
         notification.setProgress(0, 0, false);
-        notificationManager.notify(1, notification.build());
+        mNotificationManager.notify(1, notification.build());
     }
 
     /**
@@ -262,10 +240,10 @@ public class UpdateDownloader {
             success = folder.mkdirs();
         }
         if (!success) {
-            downloadTask.cancel(true);
+            mDownloadTask.cancel(true);
             mProgressDialog.dismiss();
-            Toast.makeText(getContext(), getString(R.string.create_failed), Toast.LENGTH_SHORT).show();
-            setNotification(getString(R.string.download_failed), R.drawable.ic_cancel);
+            Toast.makeText(getContext(), getContext().getString(R.string.create_failed), Toast.LENGTH_SHORT).show();
+            setNotification(getContext().getString(R.string.download_failed), R.drawable.ic_cancel);
         }
     }
 
