@@ -158,45 +158,8 @@ public class DownloadFragment extends Fragment{
         downloadSpinner.setAdapter(spinnerAdapter);
     }
 
-    public void downloadFile(String URL){
-        if (KernelUpdater.isNetworkAvailable(getActivity())) {
-            filename = URLUtil.guessFileName(URL, null, MimeTypeMap.getFileExtensionFromUrl(URL));
-            final File alreadyExist = new File(getExternalStorageDirectory()
-                    + getResources().getString(R.string.download_location), filename);
-            if (!alreadyExist.exists()) {
-                // Set downloading notification
-                notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
-                notification = new NotificationCompat.Builder(getActivity());
-                notification.setContentTitle(getString(R.string.kernelDownloader))
-                        .setContentText(getString(R.string.downloading_update))
-                        .setSmallIcon(R.drawable.ic_notification)
-                        .setColor(ContextCompat.getColor(getContext(), R.color.blue_500));
-                // Initialize download progress dialog
-                mProgressDialog = new ProgressDialog(getActivity());
-                mProgressDialog.setMessage(getString(R.string.downloading_update));
-                mProgressDialog.setIndeterminate(true);
-                mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                mProgressDialog.setCancelable(true);
-                mProgressDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        downloadTask.cancel(true);
-                        if (alreadyExist.exists())
-                            if (alreadyExist.delete())
-                                Toast.makeText(getActivity(), getString(R.string.download_canceled), Toast.LENGTH_SHORT).show();
-                        mProgressDialog.dismiss();
-                    }
-                });
-                // Start downloading in the background
-                downloadTask = new DownloadTask(getActivity());
-                downloadTask.execute(URL);
-            } else {
-                KernelUpdater.flashFile(getContext(), alreadyExist.toString());
-            }
-        }
-        else
-            Snackbar.make(downloadView, getString(R.string.no_internet), Snackbar.LENGTH_SHORT)
-                    .show();
+    public void downloadFile(String URL) {
+        updateDownloader.downloadUpdate(URL);
     }
 
     /**
