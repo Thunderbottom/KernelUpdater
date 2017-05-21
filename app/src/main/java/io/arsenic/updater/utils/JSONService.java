@@ -4,8 +4,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.List;
-import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -17,23 +15,10 @@ public class JSONService {
     /**
      * Making web service call
      *
-     * @param url - url to make request
-     * @param method - http request method
-     */
-    public static String request(String url, int method) {
-        return request(url, method, null, true);
-    }
-
-    /**
-     * Making service call
-     *
      * @param urlAddress - url to make request
      * @param method - http request method
-     * @param header - http request header
-     * @param newline - true to append a newline each line
      */
-    private static String request(String urlAddress, int method,
-                                  Map<String, String> header, boolean newline) {
+    public static String request(String urlAddress, int method) {
         URL url;
         StringBuilder response = new StringBuilder();
         try {
@@ -44,37 +29,18 @@ public class JSONService {
             conn.setConnectTimeout(15000);
             conn.setDoInput(true);
 
-            if (method == POST) {
+            if (method == POST)
                 conn.setRequestMethod("POST");
-            } else if (method == GET) {
+            else if (method == GET)
                 conn.setRequestMethod("GET");
-            }
-
-            if (header != null) {
-                for (Map.Entry<String, String> entry : header.entrySet()) {
-                    conn.setRequestProperty(entry.getKey(), entry.getValue());
-                }
-            }
 
             int responseCode = conn.getResponseCode();
 
             if (responseCode == HttpsURLConnection.HTTP_OK) {
                 String line;
                 BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                while ((line = br.readLine()) != null) {
-                    if (newline) {
-                        response.append(line).append("\n");
-                    } else {
-                        response.append(line);
-                    }
-                }
-                if (header != null) {
-                    header.clear();
-                    for (Map.Entry<String, List<String>> entry : conn.getHeaderFields().entrySet()) {
-                        List<String> l = entry.getValue();
-                        header.put(entry.getKey(), l.get(l.size() - 1));
-                    }
-                }
+                while ((line = br.readLine()) != null)
+                    response.append(line).append("\n");
             }
         } catch (Exception e) {
             e.printStackTrace();

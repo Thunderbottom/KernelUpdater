@@ -76,23 +76,21 @@ public class KernelSplash extends Activity {
                 try {
                     JSONObject json = new JSONObject(jsonStr);
                     KernelUpdater.setJSON(json);
+                    String OS_type;
                     if (KernelUpdater.getKernelVersion().contains("lineage")) {
-                        JSONObject OS = json.getJSONObject("Lineage");
-                        remoteKernelVersion = OS.getString("version");
-                        KernelUpdater.setDownloadURL(OS.getString("link"));
+                        OS_type = "Lineage";
                     } else if (KernelUpdater.getKernelVersion().contains("aosp") ||
                             currentKernelVersion.equals("34032")) {
-                        JSONObject OS = json.getJSONObject("AOSP");
-                        remoteKernelVersion = OS.getString("version");
-                        KernelUpdater.setDownloadURL(OS.getString("link"));
+                        OS_type = "AOSP";
                     } else if (Integer.parseInt(currentKernelVersion) < 34032) {
-                        JSONObject OS = json.getJSONObject("OOS");
-                        remoteKernelVersion = OS.getString("version");
-                        KernelUpdater.setDownloadURL(OS.getString("link"));
+                        OS_type = "OOS";
                     } else {
                         KernelUpdater.setUpdateValue(-3);
                         return null;
                     }
+                    JSONObject OS = json.getJSONObject(OS_type);
+                    remoteKernelVersion = OS.getString("version");
+                    KernelUpdater.setDownloadURL(OS.getString("link"));
                     if (Integer.parseInt(remoteKernelVersion) > Integer.parseInt(currentKernelVersion))
                         updateValue = 1;
                     else if (Integer.parseInt(remoteKernelVersion) < Integer.parseInt(currentKernelVersion))
