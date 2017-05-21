@@ -221,7 +221,7 @@ public class UpdateDownloader {
         }
     }
 
-    public void setNotification(String notification_text, int notification_icon) {
+    private void setNotification(String notification_text, int notification_icon) {
         NotificationCompat.Builder notification = mNotification;
         notification.setContentText(notification_text);
         notification.setSmallIcon(notification_icon);
@@ -233,7 +233,7 @@ public class UpdateDownloader {
      *  Checks whether the download directory exists.
      *  Tries to create the directory if it does not exist.
      **/
-    public void checkDir(){
+    private void checkDir(){
         File folder = new File(getExternalStorageDirectory() + getContext().getString(R.string.download_location));
         boolean success = true;
         if (!folder.exists()) {

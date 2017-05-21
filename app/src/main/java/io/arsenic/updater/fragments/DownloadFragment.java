@@ -3,11 +3,8 @@ package io.arsenic.updater.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.app.NotificationManager;
-import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -42,10 +39,6 @@ public class DownloadFragment extends Fragment {
 
     View downloadView;
     private Spinner downloadSpinner;
-    ProgressDialog mProgressDialog;
-    NotificationManager notificationManager;
-    NotificationCompat.Builder notification;
-    String filename;
     Unbinder unbinder;
 
     @BindView(R.id.searchButton) Button searchButton;

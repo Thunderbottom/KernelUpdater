@@ -1,13 +1,11 @@
 package io.arsenic.updater.fragments;
 
 
+import android.annotation.SuppressLint;
 import android.app.Fragment;
-import android.app.NotificationManager;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,17 +28,11 @@ import static android.content.ContentValues.TAG;
 
 public class HomeFragment extends Fragment {
 
+    @SuppressLint("StaticFieldLeak")
     public static UpdateDownloader updateDownloader;
 
     RootUtils.SU su;
-    ProgressDialog mProgressDialog;
-    NotificationManager notificationManager;
-    NotificationCompat.Builder notification;
     View homeView;
-
-    int TIMEOUT =  1500;
-
-    String filename;
 
     private Unbinder unbinder;
 
