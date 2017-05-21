@@ -159,7 +159,7 @@ public class DownloadFragment extends Fragment{
     }
 
     public void downloadFile(String URL) {
-        updateDownloader.downloadUpdate(URL);
+        HomeFragment.updateDownloader.downloadUpdate(URL);
     }
 
     /**
