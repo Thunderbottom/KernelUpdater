@@ -72,7 +72,7 @@ public class KernelSplash extends Activity {
                     .getKernelVersion()
                     .replaceAll("\\D+", "");
             if(KernelUpdater.isNetworkAvailable(activities[0])) {
-                String jsonStr = JSONService.request(activities[0].getResources().getString(R.string.update_url), JSONService.GET);
+                String jsonStr = JSONService.request(activities[0].getResources().getString(R.string.update_url));
                 try {
                     JSONObject json = new JSONObject(jsonStr);
                     KernelUpdater.setJSON(json);
