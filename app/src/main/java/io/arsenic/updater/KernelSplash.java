@@ -72,9 +72,8 @@ public class KernelSplash extends Activity {
                     .getKernelVersion()
                     .replaceAll("\\D+", "");
             if(KernelUpdater.isNetworkAvailable(activities[0])) {
-                String jsonStr = JSONService.request(activities[0].getResources().getString(R.string.update_url));
+                JSONObject json = JSONService.request(activities[0].getResources().getString(R.string.update_url));
                 try {
-                    JSONObject json = new JSONObject(jsonStr);
                     KernelUpdater.setJSON(json);
                     String OS_type;
                     if (KernelUpdater.getKernelVersion().contains("lineage")) {
