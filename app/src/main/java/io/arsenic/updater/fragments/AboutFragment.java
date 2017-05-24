@@ -140,10 +140,22 @@ public class AboutFragment extends Fragment {
 
     private void initViews(){
         RecyclerView recyclerView = (RecyclerView) aboutView.findViewById(R.id.libraryRecyclerView);
-        library_names        = new ArrayList<>(Arrays.asList(getContext().getResources().getStringArray(R.array.library_name)));
-        library_versions     = new ArrayList<>(Arrays.asList(getContext().getResources().getStringArray(R.array.library_version)));
-        library_descriptions = new ArrayList<>(Arrays.asList(getContext().getResources().getStringArray(R.array.library_description)));
-        library_urls         = new ArrayList<>(Arrays.asList(getContext().getResources().getStringArray(R.array.library_urls)));
+        library_names        = new ArrayList<>(
+                Arrays.asList(getContext()
+                .getResources()
+                .getStringArray(R.array.library_name)));
+        library_versions     = new ArrayList<>(
+                Arrays.asList(getContext()
+                .getResources()
+                .getStringArray(R.array.library_version)));
+        library_descriptions = new ArrayList<>(
+                Arrays.asList(getContext()
+                .getResources()
+                .getStringArray(R.array.library_description)));
+        library_urls         = new ArrayList<>(
+                Arrays.asList(getContext()
+                .getResources()
+                .getStringArray(R.array.library_urls)));
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity().getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
@@ -151,7 +163,8 @@ public class AboutFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
-            GestureDetector gestureDetector = new GestureDetector(getActivity().getApplicationContext(), new GestureDetector.SimpleOnGestureListener() {
+            GestureDetector gestureDetector = new GestureDetector(
+                    getActivity().getApplicationContext(), new GestureDetector.SimpleOnGestureListener() {
 
                 @Override public boolean onSingleTapUp(MotionEvent e) {
                     return true;
@@ -168,7 +181,6 @@ public class AboutFragment extends Fragment {
                     customTabIntent = builder.build();
                     customTabIntent.launchUrl(getContext(), Uri.parse(library_urls.get(position)));
                 }
-
                 return false;
             }
 

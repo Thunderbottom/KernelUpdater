@@ -44,4 +44,6 @@ dependencies {
     // AndroidIconics
     compile "com.mikepenz:iconics-core:2.8.4@aar"
     compile 'com.mikepenz:community-material-typeface:1.9.32.1@aar'
+    //Networking
+    compile 'com.afollestad:bridge:5.1.2'
 }
