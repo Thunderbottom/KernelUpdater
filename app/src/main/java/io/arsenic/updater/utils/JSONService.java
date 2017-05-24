@@ -3,6 +3,8 @@ package io.arsenic.updater.utils;
 import com.afollestad.bridge.Bridge;
 import com.afollestad.bridge.BridgeException;
 
+import org.json.JSONObject;
+
 public class JSONService {
 
 
@@ -11,18 +13,18 @@ public class JSONService {
      *
      * @param urlAddress - url to make request
      */
-    public static String request(String urlAddress) {
-        StringBuilder response = new StringBuilder();
+    public static JSONObject request(String urlAddress) {
+        JSONObject response =  new JSONObject();
         try {
-            response.append( Bridge
+            response = Bridge
                     .get(urlAddress)
                     .request()
                     .response()
-                    .asString());
+                    .asJsonObject();
             } catch (BridgeException e1) {
             e1.printStackTrace();
         }
-        return response.toString();
+        return response;
     }
 
 }
